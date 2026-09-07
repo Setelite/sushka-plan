@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Сушка">
+<title>Сушка — Максим</title>
+<style>
+  :root{
+    --bg:#0f1712;
+    --card:#182420;
+    --card2:#1e2d27;
+    --line:#2a3a33;
+    --lime:#c8f169;
+    --lime-dim:#8fae4a;
+    --orange:#ff9a52;
+    --blue:#6ec3ff;
+    --text:#eef3ee;
+    --text-dim:#9fb0a8;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; padding:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px; margin:0 auto; padding:20px 16px 60px;}
+
+  .hero{
+    padding:28px 4px 20px;
+  }
+  .hero h1{
+    font-size:30px;
+    line-height:1.1;
+    margin:0 0 4px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .hero .sub{
+    color:var(--text-dim);
+    font-size:15px;
+    margin:0;
+  }
+
+  .macros{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin:18px 0 8px;
+  }
+  .macro-box{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 8px;
+    text-align:center;
+  }
+  .macro-box .num{
+    font-size:26px;
+    font-weight:800;
+    display:block;
+    line-height:1;
+  }
+  .macro-box .num span{font-size:14px; font-weight:600; opacity:.7;}
+  .macro-box .lbl{
+    font-size:12px;
+    color:var(--text-dim);
+    margin-top:6px;
+    display:block;
+  }
+  .protein .num{color:var(--lime);}
+  .fat .num{color:var(--orange);}
+  .carb .num{color:var(--blue);}
+  .kcal-line{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:14px;
+    margin:2px 0 22px;
+  }
+  .kcal-line b{color:var(--text); font-size:17px;}
+
+  /* Tabs */
+  .tab-radio{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+  .tabs{
+    display:flex;
+    gap:6px;
+    background:var(--card);
+    border-radius:14px;
+    padding:5px;
+    margin-bottom:18px;
+    border:1px solid var(--line);
+  }
+  .tab-btn{
+    flex:1;
+    display:block;
+    text-align:center;
+    background:transparent;
+    border:none;
+    color:var(--text-dim);
+    font-size:12.5px;
+    font-weight:700;
+    padding:10px 2px;
+    border-radius:10px;
+    font-family:inherit;
+  }
+  #tab-food:checked ~ .tabs label[for="tab-food"],
+  #tab-cardio:checked ~ .tabs label[for="tab-cardio"],
+  #tab-foods:checked ~ .tabs label[for="tab-foods"],
+  #tab-train:checked ~ .tabs label[for="tab-train"],
+  #tab-health:checked ~ .tabs label[for="tab-health"],
+  #tab-tracker:checked ~ .tabs label[for="tab-tracker"]{
+    background:var(--lime);
+    color:#10190f;
+  }
+  .panel{display:none;}
+  #tab-food:checked ~ #food,
+  #tab-cardio:checked ~ #cardio,
+  #tab-foods:checked ~ #foods,
+  #tab-train:checked ~ #train,
+  #tab-health:checked ~ #health,
+  #tab-tracker:checked ~ #tracker{
+    display:block;
+  }
+
+  .section-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--lime);
+    margin:22px 0 10px;
+    padding-left:2px;
+  }
+  .section-title:first-child{margin-top:0;}
+
+  /* nested day tabs for training */
+  .day-radio{position:absolute; opacity:0; pointer-events:none;}
+  .day-tabs{display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;}
+  .day-btn{
+    flex:1 1 30%;
+    min-width:60px;
+    text-align:center;
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    font-size:12px;
+    font-weight:800;
+    padding:9px 4px;
+    border-radius:12px;
+  }
+  #tday1:checked ~ .day-tabs label[for="tday1"],
+  #tday2:checked ~ .day-tabs label[for="tday2"],
+  #tday3:checked ~ .day-tabs label[for="tday3"],
+  #tday4:checked ~ .day-tabs label[for="tday4"],
+  #tday5:checked ~ .day-tabs label[for="tday5"]{
+    background:var(--orange);
+    border-color:var(--orange);
+    color:#2a1608;
+  }
+  .day-panel{display:none;}
+  #tday1:checked ~ #tday1c,
+  #tday2:checked ~ #tday2c,
+  #tday3:checked ~ #tday3c,
+  #tday4:checked ~ #tday4c,
+  #tday5:checked ~ #tday5c{display:block;}
+
+  .warmup-note{
+    display:flex; gap:10px; align-items:center;
+    background:rgba(255,154,82,.1);
+    border-radius:12px; padding:11px 14px;
+    margin-bottom:12px; font-size:13px; color:var(--text-dim);
+  }
+  .ex-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 15px;
+    margin-bottom:9px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .ex-card .ex-n{
+    font-size:15px;
+    font-weight:700;
+    line-height:1.3;
+  }
+  .ex-card .ex-s{
+    font-size:14px;
+    font-weight:800;
+    color:var(--lime);
+    background:rgba(200,241,105,.12);
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+
+  .meal-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px 16px 14px;
+    margin-bottom:12px;
+  }
+  .meal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:10px;
+  }
+  .meal-name{
+    font-size:17px;
+    font-weight:800;
+  }
+  .meal-time{
+    font-size:15px;
+    font-weight:700;
+    color:var(--orange);
+    background:rgba(255,154,82,.12);
+    padding:3px 10px;
+    border-radius:20px;
+  }
+  .meal-note{
+    font-size:12.5px;
+    color:var(--text-dim);
+    margin:-4px 0 10px;
+  }
+  .food-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:9px 0;
+    border-top:1px solid var(--line);
+    font-size:16px;
+  }
+  .food-row:first-of-type{border-top:none;}
+  .food-amt{
+    font-weight:800;
+    color:var(--lime);
+    white-space:nowrap;
+    padding-left:10px;
+    font-size:16px;
+  }
+
+  .rule-card{
+    background:var(--card2);
+    border-left:4px solid var(--lime);
+    border-radius:10px;
+    padding:14px 14px;
+    margin-bottom:10px;
+    font-size:14.5px;
+    line-height:1.5;
+  }
+  .rule-card b{color:var(--lime);}
+
+  /* Weekly grid */
+  .week-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .day-box{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 2px 8px;
+    text-align:center;
+  }
+  .day-box.rest{
+    background:rgba(255,154,82,.08);
+    border-color:rgba(255,154,82,.35);
+  }
+  .day-box .d{
+    font-size:11px;
+    color:var(--text-dim);
+    display:block;
+    margin-bottom:6px;
+    font-weight:700;
+  }
+  .day-box .icon{font-size:20px; display:block; margin-bottom:4px;}
+  .day-box .lab{font-size:10px; font-weight:700; color:var(--lime);}
+  .day-box.rest .lab{color:var(--orange);}
+
+  .cardio-opt{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .cardio-opt .num-badge{
+    background:var(--lime);
+    color:#10190f;
+    font-weight:800;
+    font-size:15px;
+    width:28px; height:28px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .cardio-opt .txt b{display:block; font-size:15.5px; margin-bottom:2px;}
+  .cardio-opt .txt span{font-size:13.5px; color:var(--text-dim);}
+
+  .big-stat{
+    display:flex;
+    justify-content:space-between;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:18px;
+  }
+  .big-stat div{text-align:center; flex:1;}
+  .big-stat .v{font-size:24px; font-weight:800; color:var(--lime); display:block;}
+  .big-stat .l{font-size:11.5px; color:var(--text-dim); margin-top:2px; display:block;}
+
+  /* Food table */
+  .food-table{width:100%; border-collapse:collapse; margin-bottom:8px;}
+  .food-table th{
+    text-align:left;
+    font-size:11px;
+    color:var(--text-dim);
+    font-weight:700;
+    padding:0 8px 8px 0;
+  }
+  .food-table th:last-child, .food-table td:last-child{text-align:right;}
+  .prod-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .prod-card .pname{font-size:16px; font-weight:700;}
+  .prod-card .puse{font-size:12.5px; color:var(--text-dim); margin-top:2px;}
+  .prod-card .pkcal{
+    font-size:19px;
+    font-weight:800;
+    color:var(--lime);
+    text-align:right;
+    white-space:nowrap;
+    padding-left:12px;
+  }
+  .prod-card .pkcal span{font-size:11px; font-weight:600; color:var(--text-dim); display:block;}
+
+  .footer-note{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:12px;
+    margin-top:28px;
+    line-height:1.6;
+  }
+
+  /* Tracker */
+  .add-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .add-row input{
+    flex:1;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    color:var(--text);
+    font-size:16px;
+    font-family:inherit;
+  }
+  .add-row input::placeholder{color:var(--text-dim);}
+  .add-btn{
+    background:var(--lime);
+    color:#10190f;
+    border:none;
+    border-radius:12px;
+    padding:0 18px;
+    font-weight:800;
+    font-size:22px;
+    font-family:inherit;
+  }
+  .avg-hero{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px;
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .avg-hero .v{font-size:36px; font-weight:800; color:var(--lime); display:block; line-height:1;}
+  .avg-hero .l{font-size:13px; color:var(--text-dim); margin-top:6px; display:block;}
+  .avg-hero .trend{font-size:13px; margin-top:4px; display:block; font-weight:700;}
+  .entry-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 14px;
+    margin-bottom:6px;
+  }
+  .entry-row .ed{font-size:13px; color:var(--text-dim);}
+  .entry-row .ew{font-size:17px; font-weight:800;}
+  .entry-row .edel{
+    background:none; border:none; color:var(--text-dim);
+    font-size:18px; padding:2px 6px; font-family:inherit;
+  }
+  .empty-msg{color:var(--text-dim); font-size:13.5px; text-align:center; padding:14px 0;}
+
+  .check-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:13px 14px;
+    margin-bottom:8px;
+    font-size:15px;
+  }
+  .check-item input[type="checkbox"]{
+    width:22px; height:22px; flex-shrink:0;
+    accent-color:var(--lime);
+  }
+  .check-item.checked{opacity:.5;}
+  .reset-btn{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    border-radius:12px;
+    padding:12px;
+    font-size:13px;
+    font-family:inherit;
+    margin-top:10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>План на сушку</h1>
+    <p class="sub">Максим · питание и кардио</p>
+  </div>
+
+  <div class="macros">
+    <div class="macro-box protein"><span class="num">200<span>г</span></span><span class="lbl">белок</span></div>
+    <div class="macro-box fat"><span class="num">65<span>г</span></span><span class="lbl">жиры</span></div>
+    <div class="macro-box carb"><span class="num">140<span>г</span></span><span class="lbl">углеводы</span></div>
+  </div>
+  <p class="kcal-line">≈ <b>1 925 ккал</b> / сутки · мясо и крупы — сырой/сухой вес</p>
+
+  <input type="radio" name="tabgroup" id="tab-food" class="tab-radio" checked>
+  <input type="radio" name="tabgroup" id="tab-cardio" class="tab-radio">
+  <input type="radio" name="tabgroup" id="tab-foods" class="tab-radio">
+  <input type="radio" name="tabgroup" id="tab-train" class="tab-radio">
+  <input type="radio" name="tabgroup" id="tab-health" class="tab-radio">
+  <input type="radio" name="tabgroup" id="tab-tracker" class="tab-radio">
+
+  <div class="tabs">
+    <label class="tab-btn" for="tab-food">Питание</label>
+    <label class="tab-btn" for="tab-cardio">Кардио</label>
+    <label class="tab-btn" for="tab-foods">Продукты</label>
+    <label class="tab-btn" for="tab-train">Трен-ки</label>
+    <label class="tab-btn" for="tab-health">Контроль</label>
+    <label class="tab-btn" for="tab-tracker">Трекер</label>
+  </div>
+
+  <!-- FOOD PANEL -->
+  <div id="food" class="panel active">
+
+    <div class="section-title">Приёмы пищи (тренировка в 19:00)</div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Приём 1 · завтрак</span><span class="meal-time">08:00</span></div>
+      <div class="food-row"><span>Цельные яйца</span><span class="food-amt">3 шт</span></div>
+      <div class="food-row"><span>Овсянка (сухой вес)</span><span class="food-amt">50 г</span></div>
+      <div class="food-row"><span>Арахисовая паста</span><span class="food-amt">15 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Приём 2</span><span class="meal-time">16:00</span></div>
+      <div class="meal-note">За 2–3 часа до тренировки</div>
+      <div class="food-row"><span>Куриное филе (сырой вес)</span><span class="food-amt">200 г</span></div>
+      <div class="food-row"><span>Рис (сухой вес)</span><span class="food-amt">60 г</span></div>
+      <div class="food-row"><span>Оливковое масло</span><span class="food-amt">10 г</span></div>
+      <div class="food-row"><span>Брокколи</span><span class="food-amt">200 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Во время тренировки</span><span class="meal-time">19:00</span></div>
+      <div class="food-row"><span>Амилопектин</span><span class="food-amt">20 г</span></div>
+      <div class="food-row"><span>Креатин</span><span class="food-amt">5 г</span></div>
+      <div class="food-row"><span>Глутамин</span><span class="food-amt">5 г</span></div>
+      <div class="food-row"><span>EAA</span><span class="food-amt">10 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Приём 3</span><span class="meal-time">20:30–21:00</span></div>
+      <div class="meal-note">Сразу после тренировки</div>
+      <div class="food-row"><span>Сывороточный протеин</span><span class="food-amt">45 г</span></div>
+      <div class="food-row"><span>Кукурузные хлопья без сахара (сухой вес)</span><span class="food-amt">40 г</span></div>
+      <div class="food-row"><span>Банан</span><span class="food-amt">100 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Приём 4</span><span class="meal-time">22:00–22:30</span></div>
+      <div class="meal-note">Через 60–90 минут после приёма 3</div>
+      <div class="food-row"><span>Куриное филе (сырой вес)</span><span class="food-amt">200 г</span></div>
+      <div class="food-row"><span>Гречка (сухой вес)</span><span class="food-amt">35 г</span></div>
+      <div class="food-row"><span>Греческий йогурт 0–2%</span><span class="food-amt">200 г</span></div>
+      <div class="food-row"><span>Брокколи</span><span class="food-amt">200 г</span></div>
+    </div>
+
+    <div class="section-title">Если тренировка в другое время</div>
+    <div class="rule-card">Держи принцип: <b>основной приём</b> — за 2–3 часа до тренировки, <b>после тренировки</b> — сразу, <b>последний приём</b> — через 60–90 минут после посттренировочного.</div>
+    <div class="rule-card">Если не успеваешь поесть за 2–3 часа — сдвинь приём ближе к тренировке, но оставь <b>минимум 1,5–2 часа</b> и не увеличивай объём еды.</div>
+
+    <div class="section-title">Правило «не голодать»</div>
+    <div class="rule-card">Голод? Сначала добавь <b>овощи</b> (брокколи, капуста, огурец, помидоры, кабачок) к текущему приёму — не масло, орехи или пасту.</div>
+    <div class="rule-card">Перекусы: огурцы, помидоры, редис, листовой салат, нежирный йогурт. Ягоды — считать в углеводах. Вода, чай, кофе без сахара — почти без калорий.</div>
+    <div class="rule-card"><b>Внимание:</b> «низкокалорийное» ≠ «без лимита» — большой объём овощей тоже даёт калории. Масла, орехи, паста, сыр, авокадо, сухофрукты — отмерять точно.</div>
+
+    <div class="section-title">Контроль веса</div>
+    <div class="rule-card">Смотри на <b>средний вес за 7 дней</b>, не на отдельные дни. Нет снижения ~10–14 дней подряд → можно корректировать рацион. Резко калории не срезать.</div>
+
+  </div>
+
+  <!-- CARDIO PANEL -->
+  <div id="cardio" class="panel">
+
+    <div class="section-title">Неделя</div>
+    <div class="week-grid">
+      <div class="day-box"><span class="d">ПН</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box"><span class="d">ВТ</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box"><span class="d">СР</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box"><span class="d">ЧТ</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box"><span class="d">ПТ</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box"><span class="d">СБ</span><span class="icon">🏃</span><span class="lab">30 мин</span></div>
+      <div class="day-box rest"><span class="d">ДЕНЬ НОГ</span><span class="icon">🚫</span><span class="lab">без кардио</span></div>
+    </div>
+
+    <div class="big-stat">
+      <div><span class="v">30</span><span class="l">минут / сессия</span></div>
+      <div><span class="v">6×</span><span class="l">в неделю</span></div>
+      <div><span class="v">0</span><span class="l">в день ног</span></div>
+    </div>
+
+    <div class="section-title">Как выполнять — выбери один вариант</div>
+    <div class="cardio-opt">
+      <div class="num-badge">1</div>
+      <div class="txt"><b>После силовой</b><span>30 минут кардио сразу после завершения силовой тренировки</span></div>
+    </div>
+    <div class="cardio-opt">
+      <div class="num-badge">2</div>
+      <div class="txt"><b>Перед последним приёмом пищи</b><span>30 минут кардио перед последним приёмом пищи</span></div>
+    </div>
+
+    <div class="rule-card">Во время кардио — пить воду по мере необходимости.</div>
+
+  </div>
+
+  <!-- FOODS PANEL -->
+  <div id="foods" class="panel">
+    <div class="section-title">Много объёма, мало калорий</div>
+    <p style="font-size:13px;color:var(--text-dim);margin:-2px 0 14px;line-height:1.5;">Не сверх нормы — а чтобы порции были больше и легче переносился дефицит. Ккал на 100 г — ориентировочно.</p>
+
+    <div class="prod-card"><div><div class="pname">Огурец</div><div class="puse">Большие салаты, перекус</div></div><div class="pkcal">12–16<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Пекинская капуста</div><div class="puse">Основа больших салатов</div></div><div class="pkcal">12–18<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Листовой салат</div><div class="puse">Большой объём салата</div></div><div class="pkcal">12–20<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Редис</div><div class="puse">Салаты, перекус</div></div><div class="pkcal">15–20<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Сельдерей</div><div class="puse">Перекус, салаты</div></div><div class="pkcal">14–20<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Помидоры</div><div class="puse">Салаты, гарнир</div></div><div class="pkcal">18–22<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Кабачок</div><div class="puse">Гарнир, тушение, запекание</div></div><div class="pkcal">20–25<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Шпинат</div><div class="puse">Салаты, омлет, гарнир</div></div><div class="pkcal">20–25<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Грибы / шампиньоны</div><div class="puse">Гарнир, тушение</div></div><div class="pkcal">20–30<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Цветная капуста</div><div class="puse">Гарнир, пюре, запекание</div></div><div class="pkcal">23–30<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Белокочанная капуста</div><div class="puse">Салат, тушение</div></div><div class="pkcal">25–30<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Болгарский перец</div><div class="puse">Салаты, гарнир</div></div><div class="pkcal">25–30<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Брокколи</div><div class="puse">Большая порция гарнира</div></div><div class="pkcal">30–35<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Ягоды</div><div class="puse">Небольшая порция к йогурту</div></div><div class="pkcal">35–60<span>ккал/100г</span></div></div>
+    <div class="prod-card"><div><div class="pname">Греческий йогурт 0–2%</div><div class="puse">Перекус / последний приём</div></div><div class="pkcal">55–75<span>ккал/100г</span></div></div>
+
+    <div class="rule-card" style="margin-top:14px;">Высокая плотность калорий — отмерять точно: <b>масла, орехи, паста, сыр, авокадо, сухофрукты.</b></div>
+  </div>
+
+  <!-- TRAINING PANEL -->
+  <div id="train" class="panel">
+
+    <div class="big-stat">
+      <div><span class="v">5×</span><span class="l">в неделю</span></div>
+      <div><span class="v">60–80</span><span class="l">мин / трен-ка</span></div>
+    </div>
+
+    <input type="radio" name="tdaytab" id="tday1" class="day-radio" checked>
+    <input type="radio" name="tdaytab" id="tday2" class="day-radio">
+    <input type="radio" name="tdaytab" id="tday3" class="day-radio">
+    <input type="radio" name="tdaytab" id="tday4" class="day-radio">
+    <input type="radio" name="tdaytab" id="tday5" class="day-radio">
+
+    <div class="day-tabs">
+      <label class="day-btn" for="tday1">Д1</label>
+      <label class="day-btn" for="tday2">Д2</label>
+      <label class="day-btn" for="tday3">Д3</label>
+      <label class="day-btn" for="tday4">Д4</label>
+      <label class="day-btn" for="tday5">Д5</label>
+    </div>
+
+    <div id="tday1c" class="day-panel">
+      <div class="section-title">День 1 · Грудь + плечи + бицепс</div>
+      <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
+      <div class="ex-card"><span class="ex-n">Жим гантелей лёжа</span><span class="ex-s">3×10, 2×5–6</span></div>
+      <div class="ex-card"><span class="ex-n">Жим штанги лёжа</span><span class="ex-s">1×12, 4×6–7</span></div>
+      <div class="ex-card"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">3×9, 2×16</span></div>
+      <div class="ex-card"><span class="ex-n">Махи вперёд со штангой</span><span class="ex-s">4×12–15</span></div>
+      <div class="ex-card"><span class="ex-n">Сгибание на бицепс стоя, Z-гриф</span><span class="ex-s">4×10, 1×6</span></div>
+      <div class="ex-card"><span class="ex-n">Сгибание узким хватом в кроссовере</span><span class="ex-s">4×8</span></div>
+    </div>
+
+    <div id="tday2c" class="day-panel">
+      <div class="section-title">День 2 · Ноги</div>
+      <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
+      <div class="ex-card"><span class="ex-n">Присед в Смите, ноги на ширине плеч</span><span class="ex-s">3×10, 2×7</span></div>
+      <div class="ex-card"><span class="ex-n">Жим ногами широким хватом</span><span class="ex-s">4×10</span></div>
+      <div class="ex-card"><span class="ex-n">Сгибание ног</span><span class="ex-s">4×8–10</span></div>
+      <div class="ex-card"><span class="ex-n">Румынская тяга со штангой (или в Смите)</span><span class="ex-s">4×7</span></div>
+      <div class="ex-card"><span class="ex-n">Болгарские приседания</span><span class="ex-s">4×10 / нога</span></div>
+    </div>
+
+    <div id="tday3c" class="day-panel">
+      <div class="section-title">День 3 · Спина + плечи + трицепс</div>
+      <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
+      <div class="ex-card"><span class="ex-n">Пуловер</span><span class="ex-s">4×10, 1×8</span></div>
+      <div class="ex-card"><span class="ex-n">Тяга верхнего блока узким хватом</span><span class="ex-s">4×7–8</span></div>
+      <div class="ex-card"><span class="ex-n">Нижняя тяга одной рукой</span><span class="ex-s">4×8–10</span></div>
+      <div class="ex-card"><span class="ex-n">Тяга гантели одной рукой</span><span class="ex-s">4×6–8</span></div>
+      <div class="ex-card"><span class="ex-n">Махи в стороны</span><span class="ex-s">6×8</span></div>
+      <div class="ex-card"><span class="ex-n">Французский жим</span><span class="ex-s">4×10</span></div>
+      <div class="ex-card"><span class="ex-n">Разгибание одной рукой обратным хватом</span><span class="ex-s">4×9</span></div>
+    </div>
+
+    <div id="tday4c" class="day-panel">
+      <div class="section-title">День 4 · Грудь + бицепс</div>
+      <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
+      <div class="ex-card"><span class="ex-n">Жим штанги лёжа (пирамида)</span><span class="ex-s">25·20·10·6·2·1</span></div>
+      <div class="ex-card"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">4×10, 1×15</span></div>
+      <div class="ex-card"><span class="ex-n">Жим гантелей под углом 30°</span><span class="ex-s">4×8–10</span></div>
+      <div class="ex-card"><span class="ex-n">Жим в хаммере горизонтально одной рукой</span><span class="ex-s">4×10 / рука</span></div>
+      <div class="ex-card"><span class="ex-n">Сгибание со штангой, прямой гриф</span><span class="ex-s">4×10, 1×8</span></div>
+      <div class="ex-card"><span class="ex-n">Молотковые сгибания сидя двумя руками</span><span class="ex-s">4×10–12</span></div>
+    </div>
+
+    <div id="tday5c" class="day-panel">
+      <div class="section-title">День 5 · Спина + плечи</div>
+      <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
+      <div class="ex-card"><span class="ex-n">Тяга верхнего блока</span><span class="ex-s">3×12, 3×8</span></div>
+      <div class="ex-card"><span class="ex-n">Тяга верхнего блока одной рукой</span><span class="ex-s">4×8</span></div>
+      <div class="ex-card"><span class="ex-n">Тяга нижнего блока одной рукой</span><span class="ex-s">4×8</span></div>
+      <div class="ex-card"><span class="ex-n">Махи в стороны</span><span class="ex-s">5×8</span></div>
+      <div class="ex-card"><span class="ex-n">Пек-дек</span><span class="ex-s">4×10</span></div>
+      <div class="ex-card"><span class="ex-n">Протяжка в кроссовере ко лбу</span><span class="ex-s">4×15</span></div>
+    </div>
+
+    <div class="section-title">Прогрессия на 8 недель</div>
+    <div class="rule-card"><b>1–2 нед.</b> — адаптация: привычные веса, 1–2 повтора в запасе, без отказа.</div>
+    <div class="rule-card"><b>3–4 нед.</b> — сохранять объём; если техника и диапазон стабильны — постепенно добавлять нагрузку.</div>
+    <div class="rule-card"><b>5–6 нед.</b> — приоритет сохранению мышц и силы; не раздувать количество подходов, следить за восстановлением.</div>
+    <div class="rule-card"><b>7–8 нед.</b> — сохранять интенсивность силовой; без экстремальных ограничений воды, соли и углеводов.</div>
+
+    <div class="section-title">Восстановление</div>
+    <div class="rule-card">Сон — 7–9 часов. Между тяжёлыми тренировками одной группы — достаточно времени на восстановление. Работа до отказа во всех упражнениях не нужна.</div>
+    <div class="rule-card" style="border-left-color:var(--orange);">⚠️ Выраженная усталость, ухудшение сна, падение силовых или работоспособности — сигнал снизить объём тренировок.</div>
+
+    <div class="section-title">Главные правила</div>
+    <div class="rule-card">Не гнаться за снижением веса любой ценой — приоритет сохранение мышц и силовых.</div>
+    <div class="rule-card">Не превращать силовую тренировку в высокоинтенсивное кардио.</div>
+    <div class="rule-card">Не использовать экстремальные манипуляции с водой, солью и обезвоживанием.</div>
+
+  </div>
+
+  <!-- HEALTH PANEL -->
+  <div id="health" class="panel">
+    <div class="section-title">Что сдать / проверить</div>
+    <div class="rule-card">🩸 <b>Общий анализ крови</b> — гематокрит, гемоглобин, эритроциты</div>
+    <div class="rule-card">🧪 <b>Печень</b> — АЛТ, АСТ, ГГТ, билирубин</div>
+    <div class="rule-card">🧪 <b>Почки</b> — креатинин / eGFR, мочевина, электролиты</div>
+    <div class="rule-card">🫀 <b>Липидный профиль</b> — общий холестерин, LDL, HDL, триглицериды, ApoB</div>
+    <div class="rule-card">⚖️ <b>Гормоны</b> — общий и свободный тестостерон, SHBG, LH, FSH, эстрадиол, пролактин</div>
+    <div class="rule-card">🚰 <b>Общий анализ мочи</b></div>
+
+    <div class="big-stat">
+      <div><span class="v">АД</span><span class="l">артериальное давление</span></div>
+      <div><span class="v">ЧСС</span><span class="l">пульс</span></div>
+    </div>
+
+    <div class="section-title">Регулярно отслеживать</div>
+    <div class="rule-card">Артериальное давление и пульс — на постоянной основе.</div>
+    <div class="rule-card">Самочувствие, масса тела, появление отёков.</div>
+    <div class="rule-card">После завершения курса — повторить анализы выше и сравнить с исходными.</div>
+
+    <div class="section-title">Когда сразу к врачу</div>
+    <div class="rule-card" style="border-left-color:var(--orange);">⚠️ Выраженное повышение давления, боль в груди, одышка, обморок, необычная сильная головная боль или другие острые симптомы — обратиться за медицинской помощью незамедлительно.</div>
+    <div class="rule-card">Не менять дозировки и не добавлять новые средства без предварительной проверки совместимости и показаний.</div>
+  </div>
+
+  <!-- TRACKER PANEL -->
+  <div id="tracker" class="panel">
+    <div class="section-title">Вес — средний за 7 дней</div>
+    <p style="font-size:13px;color:var(--text-dim);margin:-2px 0 14px;line-height:1.5;">Ориентируйся на среднее, а не на отдельные дни. Данные хранятся только в этой открытой странице — при перезагрузке страницы список очищается.</p>
+
+    <div class="avg-hero">
+      <span class="v" id="avgVal">—</span>
+      <span class="l">средний вес, кг (посл. до 7 записей)</span>
+      <span class="trend" id="trendVal"></span>
+    </div>
+
+    <div class="add-row">
+      <input type="date" id="wDate">
+      <input type="number" step="0.1" id="wVal" placeholder="кг">
+      <button class="add-btn" onclick="addWeight()">+</button>
+    </div>
+
+    <div id="entryList"></div>
+
+    <button class="reset-btn" onclick="clearWeights()">Очистить все записи веса</button>
+
+    <div class="section-title" style="margin-top:26px;">Еженедельный чек-лист</div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Все 6 кардио-сессий выполнены</span></div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Давление и пульс в норме</span></div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Отёков нет</span></div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Самочувствие в норме</span></div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Средний вес снижается или стабилен по плану</span></div>
+    <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><span>Голода не было — держался правила «сначала овощи»</span></div>
+  </div>
+
+  <p class="footer-note">Точные КБЖУ зависят от конкретных продуктов и этикеток</p>
+</div>
+
+<script>
+// --- Weight tracker (in-memory only, resets on page reload) ---
+let weights = [];
+
+function fmtDate(iso){
+  const [y,m,d] = iso.split('-');
+  return d+'.'+m;
+}
+
+function renderWeights(){
+  const list = document.getElementById('entryList');
+  if(weights.length===0){
+    list.innerHTML = '<div class="empty-msg">Пока нет записей — добавь первую выше</div>';
+  } else {
+    const sorted = [...weights].sort((a,b)=> b.date.localeCompare(a.date));
+    list.innerHTML = sorted.map((w,i)=>{
+      const realIdx = weights.indexOf(w);
+      return '<div class="entry-row"><span class="ed">'+fmtDate(w.date)+'</span><span class="ew">'+w.val.toFixed(1)+' кг</span><button class="edel" onclick="delWeight('+realIdx+')">✕</button></div>';
+    }).join('');
+  }
+  const last7 = [...weights].sort((a,b)=> b.date.localeCompare(a.date)).slice(0,7);
+  if(last7.length===0){
+    document.getElementById('avgVal').textContent = '—';
+    document.getElementById('trendVal').textContent = '';
+  } else {
+    const avg = last7.reduce((s,w)=>s+w.val,0)/last7.length;
+    document.getElementById('avgVal').textContent = avg.toFixed(1);
+    if(last7.length>=2){
+      const diff = last7[0].val - last7[last7.length-1].val;
+      const el = document.getElementById('trendVal');
+      if(diff<0){ el.textContent = '↓ '+Math.abs(diff).toFixed(1)+' кг'; el.style.color='var(--lime)'; }
+      else if(diff>0){ el.textContent = '↑ '+diff.toFixed(1)+' кг'; el.style.color='var(--orange)'; }
+      else { el.textContent = 'без изменений'; el.style.color='var(--text-dim)'; }
+    } else {
+      document.getElementById('trendVal').textContent = '';
+    }
+  }
+}
+
+function addWeight(){
+  const d = document.getElementById('wDate').value;
+  const v = parseFloat(document.getElementById('wVal').value);
+  if(!d || isNaN(v)) return;
+  weights = weights.filter(w=>w.date!==d);
+  weights.push({date:d, val:v});
+  document.getElementById('wVal').value = '';
+  renderWeights();
+}
+
+function delWeight(idx){
+  weights.splice(idx,1);
+  renderWeights();
+}
+
+function clearWeights(){
+  weights = [];
+  renderWeights();
+}
+
+function toggleCheck(cb){
+  cb.closest('.check-item').classList.toggle('checked', cb.checked);
+}
+
+document.getElementById('wDate').valueAsDate = new Date();
+renderWeights();
+</script>
+</body>
+</html>
