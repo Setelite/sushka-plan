@@ -449,6 +449,128 @@
     font-family:inherit;
     margin-top:10px;
   }
+
+  /* 10-week protocol cards */
+  .protocol-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:15px 16px;
+    margin-bottom:10px;
+  }
+  .protocol-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:9px;
+  }
+  .protocol-name{font-size:16px;font-weight:800;line-height:1.25;}
+  .protocol-dose{
+    color:var(--lime);
+    font-size:14px;
+    font-weight:800;
+    white-space:nowrap;
+    background:rgba(200,241,105,.10);
+    padding:4px 9px;
+    border-radius:20px;
+  }
+  .protocol-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    border-top:1px solid var(--line);
+    padding:8px 0 0;
+    margin-top:8px;
+    font-size:14px;
+  }
+  .protocol-row span:first-child{color:var(--text-dim);}
+  .protocol-row b{text-align:right;}
+  .protocol-warning{
+    background:rgba(255,154,82,.08);
+    border:1px solid rgba(255,154,82,.28);
+    border-radius:14px;
+    padding:13px 14px;
+    margin-bottom:12px;
+    color:var(--text-dim);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+
+  /* Training working-weight tracker */
+  .ex-card{
+    flex-wrap:wrap;
+  }
+  .ex-main{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    width:100%;
+  }
+  .weight-row{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding-top:10px;
+    margin-top:4px;
+    border-top:1px solid var(--line);
+  }
+  .weight-label{
+    font-size:12px;
+    color:var(--text-dim);
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .weight-input{
+    flex:1;
+    min-width:0;
+    background:var(--card2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:9px 10px;
+    color:var(--text);
+    font-size:16px;
+    font-weight:800;
+    font-family:inherit;
+    outline:none;
+  }
+  .weight-input:focus{
+    border-color:var(--lime);
+  }
+  .weight-unit{
+    font-size:13px;
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .weight-saved{
+    font-size:11px;
+    color:var(--lime);
+    min-width:64px;
+    text-align:right;
+    opacity:0;
+    transition:opacity .2s ease;
+  }
+  .weight-saved.show{opacity:1;}
+  .training-tools{
+    display:flex;
+    gap:8px;
+    margin:0 0 14px;
+  }
+  .training-tool-btn{
+    flex:1;
+    background:var(--card);
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    border-radius:12px;
+    padding:10px 8px;
+    font-size:12px;
+    font-weight:800;
+    font-family:inherit;
+  }
+
 </style>
 </head>
 <body>
@@ -603,6 +725,11 @@
   <!-- TRAINING PANEL -->
   <div id="train" class="panel">
 
+    <div class="training-tools">
+      <button class="training-tool-btn" onclick="clearTrainingWeights()">Очистить веса</button>
+      <button class="training-tool-btn" onclick="exportTrainingWeights()">Скопировать веса</button>
+    </div>
+
     <div class="big-stat">
       <div><span class="v">5×</span><span class="l">в неделю</span></div>
       <div><span class="v">60–80</span><span class="l">мин / трен-ка</span></div>
@@ -625,56 +752,296 @@
     <div id="tday1c" class="day-panel">
       <div class="section-title">День 1 · Грудь + плечи + бицепс</div>
       <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
-      <div class="ex-card"><span class="ex-n">Жим гантелей лёжа</span><span class="ex-s">3×10, 2×5–6</span></div>
-      <div class="ex-card"><span class="ex-n">Жим штанги лёжа</span><span class="ex-s">1×12, 4×6–7</span></div>
-      <div class="ex-card"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">3×9, 2×16</span></div>
-      <div class="ex-card"><span class="ex-n">Махи вперёд со штангой</span><span class="ex-s">4×12–15</span></div>
-      <div class="ex-card"><span class="ex-n">Сгибание на бицепс стоя, Z-гриф</span><span class="ex-s">4×10, 1×6</span></div>
-      <div class="ex-card"><span class="ex-n">Сгибание узким хватом в кроссовере</span><span class="ex-s">4×8</span></div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим гантелей лёжа</span><span class="ex-s">3×10, 2×5–6</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим штанги лёжа</span><span class="ex-s">1×12, 4×6–7</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">3×9, 2×16</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Махи вперёд со штангой</span><span class="ex-s">4×12–15</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сгибание на бицепс стоя, Z-гриф</span><span class="ex-s">4×10, 1×6</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сгибание узким хватом в кроссовере</span><span class="ex-s">4×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
     </div>
 
     <div id="tday2c" class="day-panel">
       <div class="section-title">День 2 · Ноги</div>
       <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
-      <div class="ex-card"><span class="ex-n">Присед в Смите, ноги на ширине плеч</span><span class="ex-s">3×10, 2×7</span></div>
-      <div class="ex-card"><span class="ex-n">Жим ногами широким хватом</span><span class="ex-s">4×10</span></div>
-      <div class="ex-card"><span class="ex-n">Сгибание ног</span><span class="ex-s">4×8–10</span></div>
-      <div class="ex-card"><span class="ex-n">Румынская тяга со штангой (или в Смите)</span><span class="ex-s">4×7</span></div>
-      <div class="ex-card"><span class="ex-n">Болгарские приседания</span><span class="ex-s">4×10 / нога</span></div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Присед в Смите, ноги на ширине плеч</span><span class="ex-s">3×10, 2×7</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим ногами широким хватом</span><span class="ex-s">4×10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сгибание ног</span><span class="ex-s">4×8–10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Румынская тяга со штангой (или в Смите)</span><span class="ex-s">4×7</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Болгарские приседания</span><span class="ex-s">4×10 / нога</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
     </div>
 
     <div id="tday3c" class="day-panel">
       <div class="section-title">День 3 · Спина + плечи + трицепс</div>
       <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
-      <div class="ex-card"><span class="ex-n">Пуловер</span><span class="ex-s">4×10, 1×8</span></div>
-      <div class="ex-card"><span class="ex-n">Тяга верхнего блока узким хватом</span><span class="ex-s">4×7–8</span></div>
-      <div class="ex-card"><span class="ex-n">Нижняя тяга одной рукой</span><span class="ex-s">4×8–10</span></div>
-      <div class="ex-card"><span class="ex-n">Тяга гантели одной рукой</span><span class="ex-s">4×6–8</span></div>
-      <div class="ex-card"><span class="ex-n">Махи в стороны</span><span class="ex-s">6×8</span></div>
-      <div class="ex-card"><span class="ex-n">Французский жим</span><span class="ex-s">4×10</span></div>
-      <div class="ex-card"><span class="ex-n">Разгибание одной рукой обратным хватом</span><span class="ex-s">4×9</span></div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Пуловер</span><span class="ex-s">4×10, 1×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Тяга верхнего блока узким хватом</span><span class="ex-s">4×7–8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Нижняя тяга одной рукой</span><span class="ex-s">4×8–10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Тяга гантели одной рукой</span><span class="ex-s">4×6–8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Махи в стороны</span><span class="ex-s">6×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Французский жим</span><span class="ex-s">4×10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Разгибание одной рукой обратным хватом</span><span class="ex-s">4×9</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
     </div>
 
     <div id="tday4c" class="day-panel">
       <div class="section-title">День 4 · Грудь + бицепс</div>
       <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
-      <div class="ex-card"><span class="ex-n">Жим штанги лёжа (пирамида)</span><span class="ex-s">25·20·10·6·2·1</span></div>
-      <div class="ex-card"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">4×10, 1×15</span></div>
-      <div class="ex-card"><span class="ex-n">Жим гантелей под углом 30°</span><span class="ex-s">4×8–10</span></div>
-      <div class="ex-card"><span class="ex-n">Жим в хаммере горизонтально одной рукой</span><span class="ex-s">4×10 / рука</span></div>
-      <div class="ex-card"><span class="ex-n">Сгибание со штангой, прямой гриф</span><span class="ex-s">4×10, 1×8</span></div>
-      <div class="ex-card"><span class="ex-n">Молотковые сгибания сидя двумя руками</span><span class="ex-s">4×10–12</span></div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим штанги лёжа (пирамида)</span><span class="ex-s">25·20·10·6·2·1</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сведение в «бабочке»</span><span class="ex-s">4×10, 1×15</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим гантелей под углом 30°</span><span class="ex-s">4×8–10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Жим в хаммере горизонтально одной рукой</span><span class="ex-s">4×10 / рука</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Сгибание со штангой, прямой гриф</span><span class="ex-s">4×10, 1×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Молотковые сгибания сидя двумя руками</span><span class="ex-s">4×10–12</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
     </div>
 
     <div id="tday5c" class="day-panel">
       <div class="section-title">День 5 · Спина + плечи</div>
       <div class="warmup-note">🚲 Разминка — вело, 10 минут</div>
-      <div class="ex-card"><span class="ex-n">Тяга верхнего блока</span><span class="ex-s">3×12, 3×8</span></div>
-      <div class="ex-card"><span class="ex-n">Тяга верхнего блока одной рукой</span><span class="ex-s">4×8</span></div>
-      <div class="ex-card"><span class="ex-n">Тяга нижнего блока одной рукой</span><span class="ex-s">4×8</span></div>
-      <div class="ex-card"><span class="ex-n">Махи в стороны</span><span class="ex-s">5×8</span></div>
-      <div class="ex-card"><span class="ex-n">Пек-дек</span><span class="ex-s">4×10</span></div>
-      <div class="ex-card"><span class="ex-n">Протяжка в кроссовере ко лбу</span><span class="ex-s">4×15</span></div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Тяга верхнего блока</span><span class="ex-s">3×12, 3×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Тяга верхнего блока одной рукой</span><span class="ex-s">4×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Тяга нижнего блока одной рукой</span><span class="ex-s">4×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Махи в стороны</span><span class="ex-s">5×8</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Пек-дек</span><span class="ex-s">4×10</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
+      <div class="ex-card">
+        <div class="ex-main"><span class="ex-n">Протяжка в кроссовере ко лбу</span><span class="ex-s">4×15</span></div>
+        <div class="weight-row">
+          <span class="weight-label">Рабочий вес</span>
+          <input class="weight-input" type="number" step="0.5" min="0" inputmode="decimal" placeholder="0" aria-label="Рабочий вес">
+          <span class="weight-unit">кг</span>
+          <span class="weight-saved">сохранено</span>
+        </div>
+      </div>
     </div>
 
     <div class="section-title">Прогрессия на 8 недель</div>
@@ -696,6 +1063,70 @@
 
   <!-- HEALTH PANEL -->
   <div id="health" class="panel">
+
+    <div class="section-title">Сушка — 10 недель · схема из документа</div>
+    <div class="protocol-warning">Этот раздел перенесён из документа «Сушка — 10 недель». Он отображает исходную схему и не является новой медицинской рекомендацией. Не меняй дозировки и не добавляй препараты без проверки показаний и совместимости.</div>
+
+    <div class="section-title">ААС</div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Тестостерон энантат</span><span class="protocol-dose">400 мг / нед</span></div>
+      <div class="protocol-row"><span>Вторник</span><b>200 мг</b></div>
+      <div class="protocol-row"><span>Пятница</span><b>200 мг</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Мастерон энантат</span><span class="protocol-dose">300 мг / нед</span></div>
+      <div class="protocol-row"><span>Вторник</span><b>150 мг</b></div>
+      <div class="protocol-row"><span>Пятница</span><b>150 мг</b></div>
+    </div>
+
+    <div class="section-title">Аптечные препараты</div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Анастрозол</span><span class="protocol-dose">½ таблетки</span></div>
+      <div class="protocol-row"><span>Среда</span><b>½ таблетки</b></div>
+      <div class="protocol-row"><span>Суббота</span><b>½ таблетки</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Каберголин</span><span class="protocol-dose">1 таблетка</span></div>
+      <div class="protocol-row"><span>Частота</span><b>1 раз в месяц</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Телмисартан</span><span class="protocol-dose">40 мг</span></div>
+      <div class="protocol-row"><span>Приём</span><b>1 раз утром после завтрака</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Пентоксифиллин</span><span class="protocol-dose">400 мг / сут</span></div>
+      <div class="protocol-row"><span>Утро</span><b>200 мг</b></div>
+      <div class="protocol-row"><span>Перед сном</span><b>200 мг</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Метионин</span><span class="protocol-dose">500 мг / сут</span></div>
+      <div class="protocol-row"><span>Утро</span><b>250 мг</b></div>
+      <div class="protocol-row"><span>Перед сном</span><b>250 мг</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Урсосан</span><span class="protocol-dose">450 мг / сут</span></div>
+      <div class="protocol-row"><span>Утро</span><b>250 мг</b></div>
+      <div class="protocol-row"><span>Вечер</span><b>200 мг</b></div>
+    </div>
+
+    <div class="section-title">БАДы</div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Омега-3</span><span class="protocol-dose">4000 мг / сут</span></div>
+      <div class="protocol-row"><span>С завтраком</span><b>2000 мг</b></div>
+      <div class="protocol-row"><span>С последним приёмом пищи</span><b>2000 мг</b></div>
+    </div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">Мульти-минеральный комплекс</span><span class="protocol-dose">2 раза / сут</span></div>
+      <div class="protocol-row"><span>Утро</span><b>1 таблетка</b></div>
+      <div class="protocol-row"><span>Вечер</span><b>1 таблетка</b></div>
+    </div>
+
+    <div class="section-title">После 10 недель / при отклонениях</div>
+    <div class="protocol-card">
+      <div class="protocol-head"><span class="protocol-name">ХГЧ</span><span class="protocol-dose">курс 5 недель</span></div>
+      <div class="protocol-row"><span>По исходному документу</span><b>1000 МЕ · 1 раз в неделю</b></div>
+    </div>
+
     <div class="section-title">Что сдать / проверить</div>
     <div class="rule-card">🩸 <b>Общий анализ крови</b> — гематокрит, гемоглобин, эритроциты</div>
     <div class="rule-card">🧪 <b>Печень</b> — АЛТ, АСТ, ГГТ, билирубин</div>
@@ -722,7 +1153,7 @@
   <!-- TRACKER PANEL -->
   <div id="tracker" class="panel">
     <div class="section-title">Вес — средний за 7 дней</div>
-    <p style="font-size:13px;color:var(--text-dim);margin:-2px 0 14px;line-height:1.5;">Ориентируйся на среднее, а не на отдельные дни. Данные хранятся только в этой открытой странице — при перезагрузке страницы список очищается.</p>
+    <p style="font-size:13px;color:var(--text-dim);margin:-2px 0 14px;line-height:1.5;">Ориентируйся на среднее, а не на отдельные дни. Вес тела в этом трекере хранится только до перезагрузки страницы. Рабочие веса в упражнениях сохраняются в браузере автоматически.</p>
 
     <div class="avg-hero">
       <span class="v" id="avgVal">—</span>
@@ -817,6 +1248,105 @@ function toggleCheck(cb){
 
 document.getElementById('wDate').valueAsDate = new Date();
 renderWeights();
+
+// --- Training working weights: persistent localStorage ---
+const TRAINING_WEIGHT_STORAGE_KEY = 'cut_training_weights_v1';
+
+function loadTrainingWeightsMap(){
+  try{
+    return JSON.parse(localStorage.getItem(TRAINING_WEIGHT_STORAGE_KEY) || '{}');
+  }catch(e){
+    return {};
+  }
+}
+
+function saveTrainingWeightsMap(map){
+  localStorage.setItem(TRAINING_WEIGHT_STORAGE_KEY, JSON.stringify(map));
+}
+
+function buildExerciseKey(card, index){
+  const dayPanel = card.closest('.day-panel');
+  const dayId = dayPanel ? dayPanel.id : 'day';
+  const nameEl = card.querySelector('.ex-n');
+  const name = nameEl ? nameEl.textContent.trim() : ('exercise_'+index);
+  return dayId + '::' + name;
+}
+
+function initTrainingWeights(){
+  const stored = loadTrainingWeightsMap();
+  const cards = document.querySelectorAll('#train .ex-card');
+
+  cards.forEach((card, index)=>{
+    const input = card.querySelector('.weight-input');
+    const saved = card.querySelector('.weight-saved');
+    if(!input) return;
+
+    const key = buildExerciseKey(card, index);
+    input.dataset.weightKey = key;
+
+    if(stored[key] !== undefined && stored[key] !== null && stored[key] !== ''){
+      input.value = stored[key];
+    }
+
+    input.addEventListener('input', ()=>{
+      const map = loadTrainingWeightsMap();
+      if(input.value === ''){
+        delete map[key];
+      }else{
+        map[key] = input.value;
+      }
+      saveTrainingWeightsMap(map);
+
+      if(saved){
+        saved.classList.add('show');
+        clearTimeout(saved._timer);
+        saved._timer = setTimeout(()=>saved.classList.remove('show'), 900);
+      }
+    });
+  });
+}
+
+function clearTrainingWeights(){
+  if(!confirm('Удалить сохранённые рабочие веса у всех упражнений?')) return;
+  localStorage.removeItem(TRAINING_WEIGHT_STORAGE_KEY);
+  document.querySelectorAll('#train .weight-input').forEach(i=>i.value='');
+  document.querySelectorAll('#train .weight-saved').forEach(s=>s.classList.remove('show'));
+}
+
+async function exportTrainingWeights(){
+  const cards = document.querySelectorAll('#train .ex-card');
+  const lines = [];
+  let currentDay = '';
+
+  cards.forEach((card, index)=>{
+    const dayPanel = card.closest('.day-panel');
+    const dayTitle = dayPanel ? dayPanel.querySelector('.section-title') : null;
+    const day = dayTitle ? dayTitle.textContent.trim() : 'Тренировка';
+
+    if(day !== currentDay){
+      if(lines.length) lines.push('');
+      lines.push(day);
+      currentDay = day;
+    }
+
+    const name = card.querySelector('.ex-n')?.textContent.trim() || ('Упражнение '+(index+1));
+    const sets = card.querySelector('.ex-s')?.textContent.trim() || '';
+    const weight = card.querySelector('.weight-input')?.value || '—';
+    lines.push('• ' + name + ' — ' + sets + ' — ' + weight + ' кг');
+  });
+
+  const text = lines.join('\n');
+
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Тренировочные веса скопированы в буфер обмена.');
+  }catch(e){
+    prompt('Скопируй текст вручную:', text);
+  }
+}
+
+initTrainingWeights();
+
 </script>
 </body>
 </html>
