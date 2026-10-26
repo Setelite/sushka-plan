@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Программа для Тани</title>
+<style>
+  :root{
+    --bg:#f7f5f0;
+    --card:#ffffff;
+    --card2:#fbf3ee;
+    --line:#e8e3d8;
+    --teal:#1f9c86;
+    --teal-soft:#e3f4f0;
+    --coral:#ff7a59;
+    --coral-soft:#ffece6;
+    --blue:#4a90d9;
+    --blue-soft:#e8f1fb;
+    --text:#2b2a26;
+    --text-dim:#8d897e;
+    --shadow:0 2px 10px rgba(60,50,30,.06);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px; margin:0 auto; padding:20px 16px 60px;}
+
+  .hero{padding:22px 4px 18px;}
+  .hero h1{font-size:28px; line-height:1.1; margin:0 0 6px; font-weight:800; letter-spacing:-0.01em;}
+  .hero .sub{color:var(--text-dim); font-size:14.5px; margin:0 0 10px;}
+  .hero .chips{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    background:var(--teal-soft); color:var(--teal);
+    font-size:12.5px; font-weight:700;
+    padding:5px 12px; border-radius:20px;
+  }
+
+  /* main tabs */
+  .tab-radio{position:absolute; opacity:0; pointer-events:none;}
+  .tabs{
+    display:flex; gap:6px;
+    background:var(--card);
+    border-radius:14px; padding:5px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .tab-btn{
+    flex:1; display:block; text-align:center;
+    color:var(--text-dim);
+    font-size:13.5px; font-weight:700;
+    padding:10px 2px; border-radius:10px;
+  }
+  #tab-food:checked ~ .tabs label[for="tab-food"],
+  #tab-train:checked ~ .tabs label[for="tab-train"],
+  #tab-water:checked ~ .tabs label[for="tab-water"],
+  #tab-check:checked ~ .tabs label[for="tab-check"]{
+    background:var(--teal); color:#fff;
+  }
+  .panel{display:none;}
+  #tab-food:checked ~ #food,
+  #tab-train:checked ~ #train,
+  #tab-water:checked ~ #water,
+  #tab-check:checked ~ #check{display:block;}
+
+  .section-title{
+    font-size:13px; font-weight:800;
+    color:var(--teal);
+    margin:22px 0 10px; padding-left:2px;
+    text-transform:uppercase; letter-spacing:.02em;
+  }
+  .section-title:first-child{margin-top:0;}
+
+  /* macros */
+  .macros{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:8px;}
+  .macro-box{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:14px 6px; text-align:center; box-shadow:var(--shadow);
+  }
+  .macro-box .num{font-size:24px; font-weight:800; display:block; line-height:1;}
+  .macro-box .num span{font-size:13px; font-weight:600; opacity:.6;}
+  .macro-box .lbl{font-size:11.5px; color:var(--text-dim); margin-top:5px; display:block;}
+  .macro-box.protein .num{color:var(--teal);}
+  .macro-box.fat .num{color:var(--coral);}
+  .macro-box.carb .num{color:var(--blue);}
+  .kcal-line{text-align:center; color:var(--text-dim); font-size:13.5px; margin:2px 0 22px;}
+  .kcal-line b{color:var(--text); font-size:16.5px;}
+
+  /* meal cards */
+  .meal-card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px 16px 14px; margin-bottom:12px; box-shadow:var(--shadow);
+  }
+  .meal-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+  .meal-name{font-size:17px; font-weight:800;}
+  .meal-kcal{
+    font-size:14px; font-weight:800; color:var(--coral);
+    background:var(--coral-soft); padding:3px 10px; border-radius:20px;
+  }
+  .food-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 0; border-top:1px solid var(--line); font-size:15.5px;
+  }
+  .food-row:first-of-type{border-top:none; margin-top:8px;}
+  .food-amt{font-weight:800; color:var(--teal); white-space:nowrap; padding-left:10px; font-size:15px; text-align:right;}
+
+  .rule-card{
+    background:var(--card2); border-left:4px solid var(--coral);
+    border-radius:10px; padding:13px 14px; margin-bottom:9px;
+    font-size:14px; line-height:1.5;
+  }
+  .rule-card b{color:var(--coral);}
+  .rule-card.teal{border-left-color:var(--teal); background:var(--teal-soft);}
+  .rule-card.teal b{color:var(--teal);}
+
+  /* water table */
+  .water-row{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:12px 16px; margin-bottom:8px; box-shadow:var(--shadow);
+  }
+  .water-row .wt{font-size:14.5px; font-weight:700;}
+  .water-row .wv{font-size:15px; font-weight:800; color:var(--blue); text-align:right;}
+  .big-stat{
+    display:flex; justify-content:space-between;
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px; margin-bottom:18px; box-shadow:var(--shadow);
+  }
+  .big-stat div{text-align:center; flex:1;}
+  .big-stat .v{font-size:22px; font-weight:800; color:var(--blue); display:block;}
+  .big-stat .l{font-size:11px; color:var(--text-dim); margin-top:2px; display:block;}
+
+  /* training day tabs (nested) */
+  .day-radio{position:absolute; opacity:0; pointer-events:none;}
+  .day-tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:16px;}
+  .day-btn{
+    flex:1; text-align:center; background:var(--card);
+    border:1px solid var(--line); color:var(--text-dim);
+    font-size:13px; font-weight:800; padding:10px 4px; border-radius:12px;
+    box-shadow:var(--shadow);
+  }
+  #day1:checked ~ .day-tabs label[for="day1"],
+  #day2:checked ~ .day-tabs label[for="day2"],
+  #day3:checked ~ .day-tabs label[for="day3"],
+  #day4:checked ~ .day-tabs label[for="day4"],
+  #day5:checked ~ .day-tabs label[for="day5"]{
+    background:var(--coral); border-color:var(--coral); color:#fff;
+  }
+  .day-panel{display:none;}
+  #day1:checked ~ #day1c,
+  #day2:checked ~ #day2c,
+  #day3:checked ~ #day3c,
+  #day4:checked ~ #day4c,
+  #day5:checked ~ #day5c{display:block;}
+
+  .cardio-note{
+    display:flex; gap:10px; align-items:center;
+    background:var(--blue-soft); border-radius:12px;
+    padding:12px 14px; margin-bottom:14px; font-size:13.5px; color:var(--text);
+  }
+  .cardio-note .ic{font-size:20px;}
+
+  .ex-card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:14px 16px; margin-bottom:10px; box-shadow:var(--shadow);
+  }
+  .ex-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .ex-name{font-size:15.5px; font-weight:800;}
+  .ex-sets{
+    font-size:14px; font-weight:800; color:var(--teal);
+    background:var(--teal-soft); padding:3px 10px; border-radius:20px;
+    white-space:nowrap; margin-left:10px;
+  }
+  .ex-tech{font-size:13px; color:var(--text-dim); line-height:1.5;}
+  .weight-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--line);
+  }
+  .weight-label{font-size:14px; font-weight:800; color:var(--text);}
+  .weight-control{display:flex; align-items:center; gap:7px;}
+  .weight-input{
+    width:92px; min-height:44px; padding:8px 10px;
+    border:2px solid var(--line); border-radius:12px;
+    background:#fff; color:var(--text); text-align:center;
+    font:800 18px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    outline:none; transition:border-color .18s, box-shadow .18s, background .18s;
+  }
+  .weight-input:focus{border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-soft);}
+  .weight-input.saved{background:var(--teal-soft); border-color:var(--teal);}
+  .weight-unit{font-size:14px; font-weight:800; color:var(--text-dim);}
+  .save-note{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--teal-soft); color:var(--teal); border-radius:12px;
+    padding:11px 14px; margin:0 0 14px; font-size:13px; font-weight:700;
+  }
+  .reset-weights{
+    appearance:none; border:0; border-radius:9px; padding:7px 10px;
+    background:#fff; color:var(--coral); font:700 12px/1 inherit;
+    box-shadow:0 0 0 1px var(--line); cursor:pointer;
+  }
+  .after-card{
+    background:var(--coral-soft); border-radius:12px; padding:12px 14px;
+    text-align:center; font-size:14px; font-weight:700; color:var(--coral);
+    margin:14px 0 4px;
+  }
+
+  .footer-note{text-align:center; color:var(--text-dim); font-size:12px; margin-top:28px; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Программа для Тани</h1>
+    <p class="sub">Рост 170 см · Вес 73,5 кг · Рекомпозиция тела</p>
+    <div class="chips">
+      <span class="chip">Живот</span>
+      <span class="chip">Ягодицы</span>
+      <span class="chip">Ноги</span>
+    </div>
+  </div>
+
+  <input type="radio" name="maintab" id="tab-food" class="tab-radio" checked>
+  <input type="radio" name="maintab" id="tab-train" class="tab-radio">
+  <input type="radio" name="maintab" id="tab-water" class="tab-radio">
+  <input type="radio" name="maintab" id="tab-check" class="tab-radio">
+
+  <div class="tabs">
+    <label class="tab-btn" for="tab-food">Питание</label>
+    <label class="tab-btn" for="tab-train">Тренировки</label>
+    <label class="tab-btn" for="tab-water">Вода</label>
+    <label class="tab-btn" for="tab-check">Контроль</label>
+  </div>
+
+  <!-- FOOD -->
+  <div id="food" class="panel">
+
+    <div class="section-title">Стартовые КБЖУ</div>
+    <div class="macros">
+      <div class="macro-box protein"><span class="num">120<span>г</span></span><span class="lbl">белок</span></div>
+      <div class="macro-box fat"><span class="num">60<span>г</span></span><span class="lbl">жиры</span></div>
+      <div class="macro-box carb"><span class="num">190<span>г</span></span><span class="lbl">углеводы</span></div>
+    </div>
+    <p class="kcal-line">≈ <b>1 800 ккал</b> / сутки · через 2–3 недели оценка и корректировка</p>
+
+    <div class="section-title">Приёмы пищи</div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Завтрак</span><span class="meal-kcal">≈400–450</span></div>
+      <div class="food-row"><span>Яйца</span><span class="food-amt">2 шт</span></div>
+      <div class="food-row"><span>Доп. источник белка</span><span class="food-amt">100–150 г</span></div>
+      <div class="food-row"><span>Ржаной тост</span><span class="food-amt">40–50 г</span></div>
+      <div class="food-row"><span>Сыр</span><span class="food-amt">15–20 г</span></div>
+      <div class="food-row"><span>Масло</span><span class="food-amt">5 г</span></div>
+      <div class="food-row"><span>Овощи</span><span class="food-amt">150–200 г</span></div>
+      <div class="food-row"><span>Цикорий + ½ зефира</span><span class="food-amt">по желанию</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Обед</span><span class="meal-kcal">≈500–550</span></div>
+      <div class="food-row"><span>Куриная грудка</span><span class="food-amt">150 г готов.</span></div>
+      <div class="food-row"><span>Гречка / рис / паста</span><span class="food-amt">150 г готов.</span></div>
+      <div class="food-row"><span>Овощи</span><span class="food-amt">200–300 г</span></div>
+      <div class="food-row"><span>Масло</span><span class="food-amt">10 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Перекус</span><span class="meal-kcal">≈250–300</span></div>
+      <div class="food-row"><span>Греческий йогурт</span><span class="food-amt">200 г</span></div>
+      <div class="food-row"><span>Ягоды / фрукты</span><span class="food-amt">100–150 г</span></div>
+      <div class="food-row"><span>Орехи</span><span class="food-amt">10 г</span></div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-head"><span class="meal-name">Ужин</span><span class="meal-kcal">≈450–500</span></div>
+      <div class="food-row"><span>Рыба / курица / индейка</span><span class="food-amt">150–180 г</span></div>
+      <div class="food-row"><span>Рис / другой гарнир</span><span class="food-amt">100–130 г готов.</span></div>
+      <div class="food-row"><span>Овощи</span><span class="food-amt">по вкусу</span></div>
+      <div class="food-row"><span>Сметана</span><span class="food-amt">30 г</span></div>
+    </div>
+
+    <div class="section-title">Главные правила</div>
+    <div class="rule-card teal">Белок держать примерно <b>110–125 г</b> в сутки.</div>
+    <div class="rule-card teal">Углеводы вечером не убирать — особенно если тренировка вечером.</div>
+    <div class="rule-card">Овощи — ежедневно. Масло, сыр, сметану и орехи считать в общей калорийности.</div>
+    <div class="rule-card">Резкий дефицит калорий не делать. На тренировку не приходить обезвоженной или после долгого голодания.</div>
+    <div class="rule-card teal">Половинка зефира — не проблема, один продукт не решает результат. Рис, гречку и пасту можно чередовать.</div>
+
+  </div>
+
+  <!-- TRAINING -->
+  <div id="train" class="panel">
+
+    <div class="cardio-note"><span class="ic">🚲</span><span><b>Программа на 2 недели.</b> Перед каждой тренировкой — велотренажёр 10 минут.</span></div>
+
+    <div class="save-note"><span>💾 Рабочие веса сохраняются автоматически на этом устройстве</span><button class="reset-weights" id="resetWeights" type="button">Сбросить</button></div>
+
+    <input type="radio" name="daytab" id="day1" class="day-radio" checked>
+    <input type="radio" name="daytab" id="day2" class="day-radio">
+    <input type="radio" name="daytab" id="day3" class="day-radio">
+    <input type="radio" name="daytab" id="day4" class="day-radio">
+    <input type="radio" name="daytab" id="day5" class="day-radio">
+
+    <div class="day-tabs">
+      <label class="day-btn" for="day1">День 1<br>Грудь</label>
+      <label class="day-btn" for="day2">День 2<br>Ноги</label>
+      <label class="day-btn" for="day3">День 3<br>Спина</label>
+      <label class="day-btn" for="day4">День 4<br>Грудь</label>
+      <label class="day-btn" for="day5">День 5<br>Спина</label>
+    </div>
+
+    <div id="day1c" class="day-panel">
+      <div class="section-title">Грудь · бицепс · трицепс</div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим в Смите на горизонтальной скамье</span><span class="ex-sets">4×10 · 2×6</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим гантелей под углом 30°</span><span class="ex-sets">3×10 · 2×6</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим лёжа в тренажёре «Хаммер»</span><span class="ex-sets">3×8</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сведение рук в тренажёре «Бабочка»</span><span class="ex-sets">3×8 · 1×15 · 1×20</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сгибание рук на бицепс в кроссовере</span><span class="ex-sets">4×8–10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Попеременное сгибание рук с гантелями лёжа под углом 30°</span><span class="ex-sets">4×8–10</span></div><div class="ex-tech">Каждой рукой.</div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Разгибание рук из-за головы с гантелью или в кроссовере</span><span class="ex-sets">4×10</span></div></div>
+    </div>
+
+    <div id="day2c" class="day-panel">
+      <div class="section-title">Ноги</div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Разгибание ног в тренажёре двумя ногами</span><span class="ex-sets">3×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Разгибание ног в тренажёре по одной ноге</span><span class="ex-sets">3×8</span></div><div class="ex-tech">Каждой ногой.</div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим ногами с узкой постановкой стоп</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Болгарские выпады</span><span class="ex-sets">4×8–10</span></div><div class="ex-tech">Каждой ногой.</div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сгибание ног в тренажёре</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга на прямых ногах</span><span class="ex-sets">4×8–9</span></div></div>
+    </div>
+
+    <div id="day3c" class="day-panel">
+      <div class="section-title">Спина · плечи · трицепс</div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга нижнего блока обратным хватом</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга верхнего блока одной рукой</span><span class="ex-sets">4×8</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга верхнего блока узким хватом</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Становая тяга с колен</span><span class="ex-sets">5×6–8</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим в тренажёре на дельты</span><span class="ex-sets">4×10–12</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Махи гантелями в стороны</span><span class="ex-sets">6×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Разгибание рук на трицепс с канатной рукоятью</span><span class="ex-sets">4×10</span></div></div>
+    </div>
+
+    <div id="day4c" class="day-panel">
+      <div class="section-title">Грудь · плечи · бицепс</div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сведение рук в тренажёре «Бабочка»</span><span class="ex-sets">2×15 · 3×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Отрицательный жим в Смите</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сведение гантелей на скамье с отрицательным наклоном</span><span class="ex-sets">4×12</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим в «Гравитроне» на брусьях</span><span class="ex-sets">не указано</span></div><div class="ex-tech">Локти отводить в стороны — акцент на нижнюю часть груди.</div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Попеременные махи гантелями перед собой</span><span class="ex-sets">4×8–10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Молотковые сгибания гантелей к груди</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сгибание рук на бицепс обратным хватом</span><span class="ex-sets">4×10</span></div></div>
+    </div>
+
+    <div id="day5c" class="day-panel">
+      <div class="section-title">Спина · плечи · грудь</div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Махи гантелями в стороны</span><span class="ex-sets">4×10 · 1×6</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга верхнего блока</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга верхнего блока одной рукой с пола с растяжкой</span><span class="ex-sets">4×6–8</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Тяга штанги в наклоне обратным хватом</span><span class="ex-sets">4×9–10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Сведение рук в тренажёре «Пек-дек»</span><span class="ex-sets">4×10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Жим гантелей сидя</span><span class="ex-sets">4×9–10</span></div></div>
+      <div class="ex-card"><div class="ex-head"><span class="ex-name">Протяжка гантелей к груди</span><span class="ex-sets">4×8</span></div></div>
+    </div>
+
+    <div class="section-title">Прогрессия</div>
+    <div class="rule-card teal">Программа рассчитана на 2 недели. Рабочие веса записываются отдельно для каждого упражнения и сохраняются на устройстве.</div>
+
+  </div>
+
+  <!-- WATER -->
+  <div id="water" class="panel">
+    <div class="big-stat">
+      <div><span class="v">2,2–2,5 л</span><span class="l">обычный день</span></div>
+      <div><span class="v">+300–500 мл</span><span class="l">в день тренировки</span></div>
+    </div>
+
+    <div class="section-title">Распределение в тренировочный день</div>
+    <div class="water-row"><span class="wt">После пробуждения</span><span class="wv">300–400 мл</span></div>
+    <div class="water-row"><span class="wt">До обеда</span><span class="wv">600–700 мл</span></div>
+    <div class="water-row"><span class="wt">Днём</span><span class="wv">500–600 мл</span></div>
+    <div class="water-row"><span class="wt">За 1–2 часа до тренировки</span><span class="wv">300–400 мл</span></div>
+    <div class="water-row"><span class="wt">Во время / после тренировки</span><span class="wv">300–500 мл</span></div>
+
+    <div class="section-title">Ориентиры</div>
+    <div class="rule-card teal">Не пить большими объёмами залпом — распределять маленькими порциями в течение дня.</div>
+    <div class="rule-card">Ориентир нормы — светло-жёлтый цвет мочи и отсутствие выраженной жажды.</div>
+  </div>
+
+  <!-- CHECK -->
+  <div id="check" class="panel">
+    <div class="section-title">Раз в неделю</div>
+    <div class="rule-card teal">⚖️ Вес — утром, натощак, в одинаковых условиях.</div>
+
+    <div class="section-title">Раз в 4 недели</div>
+    <div class="rule-card">📏 Талия</div>
+    <div class="rule-card">📏 Живот на уровне пупка</div>
+    <div class="rule-card">📏 Бёдра</div>
+    <div class="rule-card">📏 Бедро</div>
+    <div class="rule-card teal">📸 Фото спереди / сбоку / сзади</div>
+
+    <div class="section-title">Когда корректировать</div>
+    <div class="rule-card">Если вес и объёмы не меняются 2–3 недели подряд — калорийность корректировать постепенно, не резко.</div>
+    <div class="rule-card teal">Главный ориентир — уменьшение объёмов и улучшение формы при сохранении или росте рабочих весов, а не только цифра на весах.</div>
+  </div>
+
+  <p class="footer-note">Стартовая точка · через 2–3 недели пересмотр по среднему весу, объёмам, силовым и самочувствию</p>
+</div>
+<script>
+  (() => {
+    const STORAGE_KEY = 'training-weights-five-day-v2';
+    let savedWeights = {};
+
+    try {
+      savedWeights = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch (error) {
+      savedWeights = {};
+    }
+
+    const saveAll = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedWeights));
+        return true;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    document.querySelectorAll('.day-panel').forEach((dayPanel) => {
+      dayPanel.querySelectorAll('.ex-card').forEach((card, exerciseIndex) => {
+        const exerciseName = card.querySelector('.ex-name')?.textContent.trim() || `Упражнение ${exerciseIndex + 1}`;
+        const weightId = `${dayPanel.id}-${exerciseIndex}-${exerciseName}`;
+        const row = document.createElement('div');
+        row.className = 'weight-row';
+        row.innerHTML = `
+          <label class="weight-label" for="${dayPanel.id}-weight-${exerciseIndex}">Рабочий вес</label>
+          <div class="weight-control">
+            <input
+              class="weight-input"
+              id="${dayPanel.id}-weight-${exerciseIndex}"
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              placeholder="0"
+              aria-label="Рабочий вес: ${exerciseName}"
+            >
+            <span class="weight-unit">кг</span>
+          </div>`;
+
+        const input = row.querySelector('.weight-input');
+        if (Object.prototype.hasOwnProperty.call(savedWeights, weightId)) {
+          input.value = savedWeights[weightId];
+          input.classList.add('saved');
+        }
+
+        input.addEventListener('input', () => {
+          const value = input.value.replace(/[^0-9.,]/g, '').replace(',', '.');
+          input.value = value;
+          if (value) savedWeights[weightId] = value;
+          else delete savedWeights[weightId];
+
+          const saved = saveAll();
+          input.classList.toggle('saved', saved && Boolean(value));
+        });
+
+        card.appendChild(row);
+      });
+    });
+
+    document.getElementById('resetWeights')?.addEventListener('click', () => {
+      if (!confirm('Удалить все сохранённые рабочие веса?')) return;
+      savedWeights = {};
+      saveAll();
+      document.querySelectorAll('.weight-input').forEach((input) => {
+        input.value = '';
+        input.classList.remove('saved');
+      });
+    });
+  })();
+</script>
+</body>
+</html>
