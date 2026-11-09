@@ -1205,6 +1205,44 @@ body .sh-tile-arrow{
  body .sh-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 }
 
+
+/* SUSHKA DASHBOARD V5 — editable day nutrition, unambiguous selected training day */
+body .sh-nutrition{position:relative;z-index:2;background:#fff;color:#111;border-radius:25px;padding:17px 14px 14px;margin-top:22px;box-shadow:0 14px 29px rgba(0,0,0,.3)}
+body .sh-nutrition-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:15px}
+body .sh-nutrition-heading>div>span{font-size:10px;letter-spacing:.14em;color:#8d7000;font-weight:950}
+body .sh-nutrition-heading h2{font-size:clamp(21px,5.9vw,28px);font-weight:950;letter-spacing:-.045em;line-height:1.15;margin:4px 0 0;color:#111}
+body .sh-nutrition-edit{border:0;background:#eee;border-radius:13px;min-height:42px;padding:9px 12px;color:#171717;font-size:15px;font-weight:800;white-space:nowrap;cursor:pointer}
+body .sh-macros{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+body .sh-macro{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;background:#f0f0f0;border-radius:17px;padding:15px 3px}
+body .sh-macro>span{font-size:clamp(10px,2.5vw,12px);font-weight:950;color:#535353;letter-spacing:.025em}
+body .sh-macro strong{font-size:clamp(28px,7.5vw,43px);line-height:1.17;letter-spacing:-.045em;font-weight:1000;color:#111;margin-top:7px;font-variant-numeric:tabular-nums}
+body .sh-macro small{font-size:12px;font-weight:850}
+body .sh-calories{display:flex;align-items:center;justify-content:space-between;gap:5px;border-radius:17px;background:#101010;padding:15px 13px;color:white}
+body .sh-calories>span{font-size:clamp(13px,3.5vw,18px);font-weight:900}
+body .sh-calories strong{font-size:clamp(24px,6.5vw,34px);color:#FFD400;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:950}
+body .sh-calories small{font-size:12px;color:#fff}
+#train .day-tabs{gap:8px!important}
+#train .day-tabs label.day-btn{
+ background:#fff!important;background-image:none!important;
+ color:#292929!important;border:1.5px solid #c9c9c9!important;
+ box-shadow:none!important;min-height:51px!important;
+ border-radius:14px!important;display:flex!important;justify-content:center;align-items:center!important;
+ font-weight:950!important;font-size:16px!important;transition:background-color .14s,border-color .14s,color .14s!important;
+ cursor:pointer;
+}
+#train #tday1:checked ~ .day-tabs label[for="tday1"],
+#train #tday2:checked ~ .day-tabs label[for="tday2"],
+#train #tday3:checked ~ .day-tabs label[for="tday3"],
+#train #tday4:checked ~ .day-tabs label[for="tday4"],
+#train #tday5:checked ~ .day-tabs label[for="tday5"],
+#train #tday6:checked ~ .day-tabs label[for="tday6"],
+#train #tday7:checked ~ .day-tabs label[for="tday7"]{
+ background:#FFD400!important;background-image:none!important;
+ color:#111!important;border:2px solid #111!important;
+ box-shadow:0 0 0 2px #FFD400,inset 0 1px rgba(255,255,255,.5)!important;
+}
+#train .day-tabs label.day-btn:focus-visible{outline:3px solid #b88b00!important;outline-offset:3px!important}
+
 </style>
 </head>
 <body>
@@ -1229,6 +1267,15 @@ body .sh-tile-arrow{
        <button type="button" data-settings="true" class="sh-stat"><span class="sh-stat-label"><span aria-hidden="true">▦</span> Осталось</span><strong><span id="shRemaining">14</span> <small>дн.</small></strong><span class="sh-stat-caption">До конца плана</span></button>
      </div>
    </div>
+   <section class="sh-nutrition" aria-labelledby="shNutritionTitle">
+      <div class="sh-nutrition-heading"><div><span>МОЙ РАЦИОН</span><h2 id="shNutritionTitle">Цели питания</h2></div><button type="button" id="shNutritionEdit" class="sh-nutrition-edit" aria-label="Изменить БЖУ и калорийность">✎ <span>Изменить</span></button></div>
+      <div class="sh-macros">
+        <div class="sh-macro"><span>БЕЛКИ</span><strong id="shProtein">200</strong><small>г</small></div>
+        <div class="sh-macro"><span>ЖИРЫ</span><strong id="shFat">65</strong><small>г</small></div>
+        <div class="sh-macro"><span>УГЛЕВОДЫ</span><strong id="shCarb">140</strong><small>г</small></div>
+      </div>
+      <div class="sh-calories"><span>Калорийность</span><strong><span id="shCalories">1 925</span> <small>ккал</small></strong></div>
+   </section>
    <div class="sh-menu">
      <div class="sh-menu-heading"><p>МОИ РАЗДЕЛЫ</p><h2>Всё под рукой.</h2></div>
      <div class="sh-grid"><button type="button" class="sh-tile" data-go="tab-food" aria-label="Питание: Рацион и БЖУ">
@@ -1958,6 +2005,20 @@ body .sh-tile-arrow{
   <button class="sh-save" type="submit" value="save">Сохранить изменения</button>
  </form>
 </dialog>
+<dialog class="sh-dialog" id="shNutritionDialog">
+  <form method="dialog" id="shNutritionForm" class="sh-settings-form">
+    <div class="sh-dialog-head"><span>ПИТАНИЕ</span><button type="submit" value="cancel" class="sh-close" formnovalidate aria-label="Закрыть">×</button></div>
+    <h2>Цели БЖУ и калорий</h2>
+    <p>Это твои дневные целевые показатели. Редактирование не меняет программу питания.</p>
+    <div class="sh-fields">
+     <label>Белки, г<input id="shProteinInput" type="number" min="0" max="1000" step="1" inputmode="numeric" required></label>
+     <label>Жиры, г<input id="shFatInput" type="number" min="0" max="1000" step="1" inputmode="numeric" required></label>
+     <label>Углеводы, г<input id="shCarbInput" type="number" min="0" max="1500" step="1" inputmode="numeric" required></label>
+     <label>Калорийность, ккал<input id="shCaloriesInput" type="number" min="0" max="15000" step="1" inputmode="numeric" required></label>
+    </div>
+    <button type="submit" value="save" class="sh-save">Сохранить</button>
+  </form>
+</dialog>
 <script>
 function toggleCheck(cb){
   cb.closest('.check-item').classList.toggle('checked', cb.checked);
@@ -2667,6 +2728,41 @@ initFitknowIllustrations();
     $("shSectionName").textContent=titles[id]||"Раздел";
   }));
   render();select("tab-home");
+})();
+
+
+/* SUSHKA V5 — daily targets independent of the existing nutrition and backup data */
+(function(){
+ const KEY="sushka_daily_nutrition_targets_v1";
+ const defaults={protein:200,fat:65,carbs:140,calories:1925};
+ let values={...defaults};
+ try{
+  const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(saved&&typeof saved==="object")for(const k of Object.keys(defaults)){
+    const n=Number(saved[k]);if(saved[k]!==undefined&&Number.isFinite(n)&&n>=0&&n<15001)values[k]=Math.round(n);
+  }
+ }catch(e){}
+ const $=id=>document.getElementById(id);
+ const fmt=n=>Math.round(n).toLocaleString("ru-RU");
+ function render(){for(const [key,id] of Object.entries({protein:"shProtein",fat:"shFat",carbs:"shCarb",calories:"shCalories"}))$(id).textContent=fmt(values[key])}
+ const dlg=$("shNutritionDialog"),form=$("shNutritionForm");
+ $("shNutritionEdit").addEventListener("click",()=>{
+  for(const [key,id] of Object.entries({protein:"shProteinInput",fat:"shFatInput",carbs:"shCarbInput",calories:"shCaloriesInput"}))$(id).value=values[key];
+  if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","");
+ });
+ form.addEventListener("submit",e=>{
+  if(e.submitter?.value==="cancel")return;
+  e.preventDefault();if(!form.reportValidity())return;
+  values={
+   protein:Number($("shProteinInput").value),
+   fat:Number($("shFatInput").value),
+   carbs:Number($("shCarbInput").value),
+   calories:Number($("shCaloriesInput").value)
+  };
+  try{localStorage.setItem(KEY,JSON.stringify(values))}catch(e){}
+  render();if(dlg.close)dlg.close();else dlg.removeAttribute("open");
+ });
+ render();
 })();
 
 </script>
