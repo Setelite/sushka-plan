@@ -1,0 +1,58 @@
+name: Import dashboard 3D icons
+on:
+  push:
+    paths:
+      - '.github/workflows/import-dashboard-icons.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download approved reference screenshot
+        env:
+          SOURCE_URL: "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/a0230aa55915d30e898882fe2401c3107e2743c3dd2221a46f64268532d83677.png"
+        run: |
+          curl --fail --location --retry 3 --max-time 90 --silent --show-error "$SOURCE_URL" -o /tmp/sushka-dashboard-reference.png
+          test "$(wc -c < /tmp/sushka-dashboard-reference.png)" -gt 100000
+          python -m pip install --quiet Pillow
+          mkdir -p assets/dashboard-icons
+          python - <<'PY'
+          from PIL import Image,ImageFilter
+          im=Image.open('/tmp/sushka-dashboard-reference.png').convert('RGB')
+          assert im.size==(1040,1512),im.size
+          crops={
+           "nutrition":(55,822,254,956),
+           "training":(291,822,501,956),
+           "supplements":(552,822,749,956),
+           "analyses":(791,822,992,956),
+           "cardio":(55,1118,254,1254),
+           "protocol":(291,1118,501,1254),
+           "data":(552,1118,749,1254),
+           "settings":(791,1118,992,1254)
+          }
+          for name,rect in crops.items():
+              cropped=im.crop(rect)
+              w,h=cropped.size
+              # Feather the photograph crop into the card's own dark background.
+              alpha=Image.new('L',(w,h),255)
+              px=alpha.load()
+              for y in range(h):
+                  for x in range(w):
+                      edge=min(x,w-1-x,y,h-1-y)
+                      px[x,y]=int(255*min(1,max(0,edge/15)))
+              rgba=cropped.convert('RGBA');rgba.putalpha(alpha)
+              rgba.save('assets/dashboard-icons/'+name+'.webp','WEBP',quality=90,method=6)
+              print(name,rgba.size)
+          PY
+          test "$(wc -c < assets/dashboard-icons/nutrition.webp)" -gt 2000
+      - name: Commit icon files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/dashboard-icons
+          git diff --cached --quiet || (git commit -m "Add approved 3D dashboard icon artwork" && git push)
