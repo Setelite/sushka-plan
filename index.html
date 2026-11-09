@@ -988,34 +988,159 @@ html[data-theme] .panel :is(.data-card,.import-card,.check-item,.meal-card,.prot
  html[data-theme] .panel .illustrated-welcome{gap:12px!important;padding:14px!important}
 }
 
+
+/* SUSHKA DASHBOARD V3 — real tiles instead of bottom navigation */
+html,body{scroll-padding-top:20px}
+body:has(#tab-home:checked){background:#08090b!important}
+.wrap{padding-bottom:calc(42px + env(safe-area-inset-bottom))!important}
+.sushka-home{padding:0 15px 64px!important;min-height:100dvh!important;overflow:hidden!important}
+.sushka-home::before{
+ height:clamp(390px,110vw,590px)!important;
+ right:-16px!important;left:auto!important;width:calc(100% + 16px)!important;
+ background-image:url("./assets/sushka-couple-clean-v2.webp?v=3")!important;
+ background-size:auto 100%!important;background-position:right top!important;
+ filter:none!important;opacity:1!important;
+}
+.sushka-home::after{height:75px!important;top:calc(clamp(390px,110vw,590px) - 74px)!important}
+.sh-hero{height:clamp(270px,69vw,410px);padding:27px 0 0;position:relative;z-index:1}
+.sh-brand{font:italic 1000 clamp(39px,9.1vw,72px)/.92 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+ letter-spacing:-.065em;color:#fff;text-shadow:0 2px 6px #08090b}
+.sh-brand>span:not(.sh-fire){padding-left:0}
+.sh-brand i{color:#FFD400;font-style:normal}
+.sh-fire{color:#FFD400;font-size:.8em}
+.sh-sub{margin:22px 0 0;color:#dedede;font-weight:650;line-height:1.4;font-size:clamp(14px,3.7vw,20px);max-width:220px}
+.sh-underline{width:76px;height:6px;border-radius:9px;background:#FFD400;margin-top:20px}
+.sh-info{position:relative;z-index:2;padding:18px 0 0}
+.sh-info-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sh-plan-tag{font-size:11px;color:#FFD400;letter-spacing:.18em;font-weight:950}
+.sh-edit-plan{color:#f8f8f8;background:rgba(40,40,40,.83);border:1px solid #6f6f6f;padding:9px 13px;font-size:13px;border-radius:14px;font-weight:850}
+.sh-progress-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:15px 0 10px;font-size:18px;font-weight:850}
+.sh-progress-title strong{font-size:19px;color:#FFD400}
+.sh-progress-track{width:100%;height:13px;border-radius:40px;background:#505050;overflow:hidden;border:1px solid #777}
+.sh-progress-track>span{display:block;height:100%;width:0;background:#FFD400;border-radius:40px;transition:width .2s ease}
+.sh-progress-note{font-size:12px;color:#c4c4c4;margin:9px 0 17px}
+.sh-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sh-stat{display:flex;flex-direction:column;gap:6px;text-align:left;min-width:0;min-height:116px;
+ padding:12px 9px;border-radius:19px;border:1px solid #777;color:#fff;
+ background:linear-gradient(145deg,rgba(47,47,47,.93),rgba(16,16,16,.94));
+ box-shadow:inset 0 1px rgba(255,255,255,.17);cursor:pointer}
+.sh-stat-label{font-weight:800;font-size:12px;white-space:nowrap}
+.sh-stat-label span{color:#FFD400}
+.sh-stat strong{font-size:clamp(19px,5.5vw,27px);font-weight:950;line-height:1.1;white-space:nowrap}
+.sh-stat strong small{font-size:12px}
+.sh-stat-caption{color:#cacaca;font-size:11px;line-height:1.25;margin-top:auto}
+.sh-menu{position:relative;z-index:2;margin-top:30px}
+.sh-menu-heading p{color:#FFD400;font-size:11px;letter-spacing:.18em;font-weight:900;margin:0 0 5px}
+.sh-menu-heading h2{color:#fff;font-size:clamp(27px,7vw,38px);letter-spacing:-.045em;margin:0 0 17px;font-weight:950}
+.sh-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.sh-tile{display:flex;flex-direction:column;min-height:205px;text-align:left;position:relative;
+ padding:13px 13px 15px;border:1.5px solid #777;border-radius:24px;
+ color:#fff;background:linear-gradient(152deg,#303030,#121212 72%);box-shadow:inset 0 1px rgba(255,255,255,.16);
+ cursor:pointer;transition:transform .16s ease,border-color .16s ease}
+.sh-tile:active{transform:scale(.975)}
+.sh-tile:focus-visible{outline:3px solid #FFD400;outline-offset:3px}
+.sh-tile-media{display:grid;place-items:center;height:98px;align-self:center;width:100%;margin:-3px 0 4px}
+.sh-tile-media img{height:102px;width:102px;object-fit:contain}
+.sh-tile-title{font-size:clamp(18px,4.8vw,23px);font-weight:950;letter-spacing:-.03em;line-height:1.1}
+.sh-tile-desc{font-size:12px;color:#ccc;line-height:1.35;margin:7px 27px 0 0}
+.sh-tile-arrow{position:absolute;right:12px;bottom:12px;border-radius:50%;width:27px;height:27px;display:grid;place-items:center;
+ background:#FFD400;color:#111;font-size:22px;font-weight:950;line-height:1}
+.sushka-dock,.sushka-more{display:none!important}
+body:not(:has(#tab-home:checked)) .sh-section-toolbar{display:flex!important}
+.sh-section-toolbar{display:none;align-items:center;gap:8px;justify-content:space-between;padding:14px 0 8px}
+.sh-section-toolbar #shSectionName{color:#151515;font-size:18px;font-weight:950}
+.sh-back,.sh-settings-small{border:1px solid #ddd;background:#fff;border-radius:14px;color:#111;min-height:47px;padding:10px 14px;font-size:14px;font-weight:900}
+.sh-settings-small{font-size:23px;min-width:47px}
+.sh-dialog{border:1px solid #383838;border-radius:27px;background:#fff;color:#111;width:min(94vw,420px);padding:0;max-height:85vh;overflow:auto}
+.sh-dialog::backdrop{background:rgba(0,0,0,.78)}
+.sh-settings-form{padding:23px}
+.sh-dialog-head{display:flex;justify-content:space-between;align-items:center;color:#9a7900;letter-spacing:.16em;font-size:12px;font-weight:950}
+.sh-close{background:#efefef;border:0;border-radius:50%;width:42px;height:42px;font-size:28px;color:#111}
+.sh-settings-form h2{font-size:29px;letter-spacing:-.04em;margin:10px 0}
+.sh-settings-form p{color:#666;font-size:14px;line-height:1.5}
+.sh-fields{display:grid;gap:13px;margin:19px 0}
+.sh-fields label{display:grid;gap:7px;font-size:15px;font-weight:850}
+.sh-fields input{width:100%;height:53px;border-radius:14px;border:1px solid #c8c8c8;padding:0 14px;font:800 19px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#111;background:#f6f6f6}
+.sh-save{display:block;width:100%;border:0;border-radius:17px;background:#FFD400;color:#111;font-size:17px;font-weight:950;min-height:55px}
+@media(max-width:380px){
+ .sushka-home{padding-left:11px!important;padding-right:11px!important}
+ .sh-stat{padding:10px 7px}.sh-stat strong{font-size:18px}.sh-stat-caption{font-size:10px}
+ .sh-tile{min-height:186px;padding:10px}.sh-tile-media{height:85px}.sh-tile-media img{width:86px;height:86px}
+ .sh-tile-title{font-size:18px}
+}
+@media(min-width:600px){
+ .sushka-home{padding-left:25px!important;padding-right:25px!important}
+ .sh-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .sh-hero{height:390px}
+ .sh-tile{min-height:216px}
+}
+@media(min-width:900px){.sh-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.sh-progress-track>span,.sh-tile{transition:none}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="sushka-home">
-
-  <div class="hero">
-    <div class="brand-row">
-      <div><span class="brand-kicker">ПИТАНИЕ · ТРЕНИРОВКИ · ПРОГРЕСС</span><h1><span class="sushka-mark"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="dropPurple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff2ff"/><stop offset=".5" stop-color="#bd91ff"/><stop offset="1" stop-color="#8055cc"/></linearGradient></defs><path d="M24 3C19 13 10 22 10 31a14 14 0 0 0 28 0C38 22 29 13 24 3z" fill="url(#dropPurple)" stroke="#e7caff" stroke-width="2"/><path d="M18 32c0 5 3 7 7 7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/></svg></span>СУШКА</h1></div>
-      <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Переключить тему">☾</button>
-    </div>
-    <p class="sub">Мой персональный план питания, тренировок и самоконтроля</p>
-  </div>
-
-  <div class="sushka-intro"><img src="./stickers/flame.svg" alt="" loading="lazy"><div><strong>Дисциплина каждый день</strong><span>Твой план и рабочие записи в одном месте</span></div></div>
-
-  <div class="macros">
-    <div class="macro-box protein"><span class="num">200<span>г</span></span><span class="lbl">белок</span></div>
-    <div class="macro-box fat"><span class="num">65<span>г</span></span><span class="lbl">жиры</span></div>
-    <div class="macro-box carb"><span class="num">140<span>г</span></span><span class="lbl">углеводы</span></div>
-  </div>
-  <p class="kcal-line">≈ <b>1 925 ккал</b> / сутки · мясо и крупы — сырой/сухой вес</p>
-
-  <div class="sushka-home-actions">
-    <button type="button" data-go="tab-train" class="sushka-home-btn sushka-home-primary">Открыть тренировки <span>↗</span></button>
-    <button type="button" data-go="tab-data" class="sushka-home-btn sushka-home-secondary">Управление данными <span>↗</span></button>
-  </div>
-  </div>
+   <div class="sh-hero">
+     <div class="sh-brand"><span class="sh-fire">◆</span> СУШКА<br><span>МАКСИМ</span><i>.</i></div>
+     <p class="sh-sub">Персональный план питания,<br>тренировок и самоконтроля.</p>
+     <div class="sh-underline"></div>
+   </div>
+   <div class="sh-info">
+     <div class="sh-info-head">
+       <span class="sh-plan-tag">ПЛАН СУШКИ</span>
+       <button type="button" class="sh-edit-plan" data-settings="true">Изменить <span aria-hidden="true">↗</span></button>
+     </div>
+     <div class="sh-progress-title"><span id="shWeekLabel">Неделя 1 из 2</span><strong id="shPercent">0%</strong></div>
+     <div class="sh-progress-track" role="progressbar" id="shProgress" aria-label="Завершённые дни плана" aria-valuemin="0" aria-valuemax="14" aria-valuenow="0"><span id="shProgressFill"></span></div>
+     <p class="sh-progress-note" id="shProgressNote">0 из 14 дней завершено</p>
+     <div class="sh-stats">
+       <button type="button" data-settings="true" class="sh-stat"><span class="sh-stat-label"><span aria-hidden="true">◉</span> Вес</span><strong><span id="shWeight">93,5</span> <small>кг</small></strong><span class="sh-stat-caption" id="shWeightDelta">Текущий вес</span></button>
+       <button type="button" data-settings="true" class="sh-stat"><span class="sh-stat-label"><span aria-hidden="true">◎</span> Цель</span><strong><span id="shGoal">87,0</span> <small>кг</small></strong><span class="sh-stat-caption">Изменить цель</span></button>
+       <button type="button" data-settings="true" class="sh-stat"><span class="sh-stat-label"><span aria-hidden="true">▦</span> Осталось</span><strong><span id="shRemaining">14</span> <small>дн.</small></strong><span class="sh-stat-caption">До конца плана</span></button>
+     </div>
+   </div>
+   <div class="sh-menu">
+     <div class="sh-menu-heading"><p>МОИ РАЗДЕЛЫ</p><h2>Всё под рукой.</h2></div>
+     <div class="sh-grid"><button type="button" class="sh-tile" data-go="tab-food" aria-label="Питание: Рацион и БЖУ">
+<span class="sh-tile-media"><img src="./stickers/apple.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Питание</span><span class="sh-tile-desc">Рацион и БЖУ</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-train" aria-label="Тренировки: Программа и веса">
+<span class="sh-tile-media"><img src="./stickers/dumbbell.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Тренировки</span><span class="sh-tile-desc">Программа и веса</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-supplements" aria-label="БАДы: Добавки и записи">
+<span class="sh-tile-media"><img src="./stickers/water.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">БАДы</span><span class="sh-tile-desc">Добавки и записи</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-analyses" aria-label="Анализы: Контроль показателей">
+<span class="sh-tile-media"><img src="./stickers/heart.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Анализы</span><span class="sh-tile-desc">Контроль показателей</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-cardio" aria-label="Кардио: Нагрузки и план">
+<span class="sh-tile-media"><img src="./stickers/chart.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Кардио</span><span class="sh-tile-desc">Нагрузки и план</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-health" aria-label="Протокол: Личные записи">
+<span class="sh-tile-media"><img src="./stickers/check.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Протокол</span><span class="sh-tile-desc">Личные записи</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-data" aria-label="Данные: Импорт и экспорт">
+<span class="sh-tile-media"><img src="./stickers/clipboard.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Данные</span><span class="sh-tile-desc">Импорт и экспорт</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-settings="true" aria-label="Настройки: Вес, цель и дни">
+<span class="sh-tile-media"><img src="./stickers/flame.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Настройки</span><span class="sh-tile-desc">Вес, цель и дни</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button>
+<button type="button" class="sh-tile" data-go="tab-foods" aria-label="Продукты: Список продуктов">
+<span class="sh-tile-media"><img src="./stickers/apple.svg?v=3" alt="" loading="lazy"></span>
+<span class="sh-tile-title">Продукты</span><span class="sh-tile-desc">Список продуктов</span><span class="sh-tile-arrow" aria-hidden="true">→</span>
+</button></div>
+   </div>
+ </div>
   <input type="radio" name="tabgroup" id="tab-home" class="tab-radio" checked>
   <input type="radio" name="tabgroup" id="tab-food" class="tab-radio">
   <input type="radio" name="tabgroup" id="tab-cardio" class="tab-radio">
@@ -1035,6 +1160,12 @@ html[data-theme] .panel :is(.data-card,.import-card,.check-item,.meal-card,.prot
     <label class="tab-btn" for="tab-analyses">Анализы</label>
     <label class="tab-btn" for="tab-health">Протокол</label>
     <label class="tab-btn" for="tab-data">Данные</label>
+  </div>
+
+  <div class="sh-section-toolbar" id="shSectionToolbar">
+   <button type="button" data-go="tab-home" class="sh-back">← Главная</button>
+   <span id="shSectionName">Питание</span>
+   <button type="button" data-settings="true" class="sh-settings-small" aria-label="Настройки">⚙</button>
   </div>
 
   <!-- FOOD PANEL -->
@@ -1686,22 +1817,19 @@ html[data-theme] .panel :is(.data-card,.import-card,.check-item,.meal-card,.prot
   <p class="footer-note">Точные КБЖУ зависят от конкретных продуктов и этикеток</p>
 </div>
 
-<nav class="sushka-dock" aria-label="Навигация Сушка Максим">
-<button type="button" data-tab="tab-home" aria-label="Главная" title="Главная"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 3l9 7v11H3V10Z"/><path d="M9 21v-8h6v8"/></svg></button>
-<button type="button" data-tab="tab-train" aria-label="Тренировки" title="Тренировки"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9v6M6 6v12M18 6v12M22 9v6M6 12h12"/></svg></button>
-<button type="button" data-tab="tab-food" aria-label="Питание" title="Питание"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18a9 9 0 0 1-18 0ZM8 7V4m4 3V3m4 4V4"/></svg></button>
-<button type="button" data-tab="tab-data" aria-label="Данные" title="Данные"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
-<button type="button" id="sushkaMoreToggle" aria-label="Ещё разделы" title="Ещё разделы" aria-expanded="false" aria-controls="sushkaMore"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-</nav>
-<div id="sushkaMore" class="sushka-more" hidden aria-label="Дополнительные разделы">
-  <div class="sushka-more-head"><strong>Все разделы</strong><button type="button" id="sushkaMoreClose" aria-label="Закрыть">×</button></div>
-  <button type="button" data-tab="tab-cardio">Кардио <span>↗</span></button>
-  <button type="button" data-tab="tab-foods">Продукты <span>↗</span></button>
-  <button type="button" data-tab="tab-supplements">БАДы <span>↗</span></button>
-  <button type="button" data-tab="tab-analyses">Анализы <span>↗</span></button>
-  <button type="button" data-tab="tab-health">Протокол <span>↗</span></button>
-</div>
-
+<dialog class="sh-dialog" id="shSettings">
+ <form method="dialog" class="sh-settings-form" id="shSettingsForm">
+  <div class="sh-dialog-head"><span>МОЙ ПЛАН</span><button type="submit" value="cancel" formnovalidate class="sh-close" aria-label="Закрыть">×</button></div>
+  <h2>Настройки сушки</h2>
+  <p>Изменения сохраняются только в браузере этого устройства.</p>
+  <div class="sh-fields">
+   <label>Текущий вес, кг<input id="shInputWeight" type="number" min="25" max="350" step=".1" inputmode="decimal" required></label>
+   <label>Целевой вес, кг<input id="shInputGoal" type="number" min="25" max="350" step=".1" inputmode="decimal" required></label>
+   <label>Завершено дней из 14<input id="shInputDays" type="number" min="0" max="14" step="1" inputmode="numeric" required></label>
+  </div>
+  <button class="sh-save" type="submit" value="save">Сохранить изменения</button>
+ </form>
+</dialog>
 <script>
 function toggleCheck(cb){
   cb.closest('.check-item').classList.toggle('checked', cb.checked);
@@ -2358,34 +2486,59 @@ function initFitknowIllustrations(){
 initFitknowIllustrations();
 
 
-/* SUSHKA MINIMAL V1: navigation only; existing storage/import code untouched */
-(function initSushkaDock(){
- const radios=[...document.querySelectorAll('input[name="tabgroup"]')];
- const dock=document.querySelector('.sushka-dock');
- const more=document.getElementById('sushkaMore');
- const toggle=document.getElementById('sushkaMoreToggle');
- const close=document.getElementById('sushkaMoreClose');
- const iconButtons=[...dock.querySelectorAll('button[data-tab]')];
- function setMore(open){more.hidden=!open;toggle.setAttribute('aria-expanded',String(open));}
- function refresh(){
-   const active=radios.find(r=>r.checked)?.id||'tab-home';
-   document.body.dataset.screen=active==='tab-home'?'home':'section';
-   iconButtons.forEach(button=>{if(button.dataset.tab===active){button.setAttribute('aria-current','page')}else{button.removeAttribute('aria-current')}});
-   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',active==='tab-home'?'#090a0b':'#f5f5f3');
- }
- function select(id){
-   const input=document.getElementById(id);
-   if(!input)return;
-   input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));
-   setMore(false);refresh();
-   window.scrollTo({top:0,behavior:'instant'});
- }
- document.querySelectorAll('[data-tab],[data-go]').forEach(button=>button.addEventListener('click',()=>select(button.dataset.tab||button.dataset.go)));
- toggle.addEventListener('click',()=>setMore(more.hidden));
- close.addEventListener('click',()=>setMore(false));
- radios.forEach(r=>r.addEventListener('change',()=>{setMore(false);refresh()}));
- document.addEventListener('keydown',e=>{if(e.key==='Escape')setMore(false)});
- refresh();
+
+
+/* SUSHKA DASHBOARD V3: navigable real tiles; original import/export untouched */
+(function(){
+  const PLAN_KEY="sushka_dashboard_settings_v3";
+  const defaults={weight:93.5,goal:87,days:0};
+  let plan={...defaults};
+  try{let p=JSON.parse(localStorage.getItem(PLAN_KEY)||"null");if(p&&typeof p==="object"){if(Number.isFinite(+p.weight))plan.weight=+p.weight;if(Number.isFinite(+p.goal))plan.goal=+p.goal;if(Number.isFinite(+p.days))plan.days=Math.max(0,Math.min(14,Math.floor(+p.days)))}}catch(e){}
+  const $=id=>document.getElementById(id);
+  const radios=[...document.querySelectorAll('input[name="tabgroup"]')];
+  const titles={"tab-home":"Главная","tab-food":"Питание","tab-train":"Тренировки","tab-cardio":"Кардио","tab-foods":"Продукты","tab-supplements":"БАДы","tab-analyses":"Анализы","tab-health":"Протокол","tab-data":"Данные"};
+  function render(){
+    const fmt=x=>Number(x).toLocaleString("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1});
+    $("shWeight").textContent=fmt(plan.weight);$("shGoal").textContent=fmt(plan.goal);
+    $("shRemaining").textContent=String(14-plan.days);
+    $("shWeekLabel").textContent=plan.days<7?"Неделя 1 из 2":"Неделя 2 из 2";
+    const pct=Math.round(plan.days/14*100);
+    $("shPercent").textContent=pct+"%";
+    $("shProgressFill").style.width=pct+"%";
+    $("shProgress").setAttribute("aria-valuenow",String(plan.days));
+    $("shProgressNote").textContent=plan.days+" из 14 дней завершено";
+    const delta=plan.weight-plan.goal;
+    $("shWeightDelta").textContent=Math.abs(delta)<.05?"Цель достигнута":delta>0?fmt(delta)+" кг до цели":"Ниже цели на "+fmt(-delta)+" кг";
+  }
+  function select(id){
+    const radio=$(id);if(!radio)return;
+    radio.checked=true;radio.dispatchEvent(new Event("change",{bubbles:true}));
+    document.body.dataset.screen=id==="tab-home"?"home":"section";
+    $("shSectionName").textContent=titles[id]||"Раздел";
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll("[data-go]").forEach(button=>button.addEventListener("click",()=>select(button.dataset.go)));
+  const dialog=$("shSettings"),form=$("shSettingsForm");
+  function openSettings(){
+    $("shInputWeight").value=plan.weight;$("shInputGoal").value=plan.goal;$("shInputDays").value=plan.days;
+    if(dialog.showModal)dialog.showModal();else dialog.setAttribute("open","");
+  }
+  document.querySelectorAll("[data-settings]").forEach(button=>button.addEventListener("click",openSettings));
+  form.addEventListener("submit",event=>{
+    if(event.submitter&&event.submitter.value==="cancel")return;
+    event.preventDefault();
+    if(!form.reportValidity())return;
+    plan={weight:Number($("shInputWeight").value),goal:Number($("shInputGoal").value),days:Number($("shInputDays").value)};
+    try{localStorage.setItem(PLAN_KEY,JSON.stringify(plan))}catch(e){}
+    render();
+    if(dialog.close)dialog.close();else dialog.removeAttribute("open");
+  });
+  radios.forEach(radio=>radio.addEventListener("change",()=>{
+    const id=radios.find(x=>x.checked)?.id||"tab-home";
+    document.body.dataset.screen=id==="tab-home"?"home":"section";
+    $("shSectionName").textContent=titles[id]||"Раздел";
+  }));
+  render();select("tab-home");
 })();
 
 </script>
