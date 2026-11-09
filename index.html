@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=neon-20261105">
 <link rel="icon" type="image/png" href="icon-180.png?v=neon-20261105">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Сушка">
-<meta name="theme-color" content="#0b0b10">
+<meta name="theme-color" content="#090a0b">
 <title>Сушка — персональный фитнес-план</title>
 <style>
   :root{
@@ -831,10 +831,98 @@ filter:drop-shadow(0 0 13px rgba(180,122,250,.38));background-size:contain!impor
 .meal-card,.ex-card,.protocol-card{padding:14px!important}}
 @media(prefers-reduced-motion:reduce){.tab-btn,.panel,body{animation:none!important;transition:none!important}}
 
+
+/* SUSHKA × FITKNOW MINIMAL V1 */
+:root,[data-theme="dark"],[data-theme="light"]{
+ --bg:#f5f5f3!important;--bg2:#fff!important;
+ --card:#fff!important;--card2:#f3f3f1!important;
+ --line:#e1e1df!important;--lime:#bf9500!important;--lime-dim:#a27c00!important;
+ --orange:#b68b00!important;--blue:#6c6c6c!important;
+ --text:#121212!important;--text-dim:#666!important;
+ --glass-border:#dededc!important;--glass-shadow:none!important;
+}
+html{background:#090a0b!important}
+body,body[data-screen="section"]{background:#f5f5f3!important;color:#121212!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important}
+body[data-screen="home"]{background:#090a0b!important;color:#fff!important}
+body:has(#tab-home:checked){background:#090a0b!important}
+.wrap{max-width:740px!important;padding:0 14px calc(110px + env(safe-area-inset-bottom))!important}
+.sushka-home{background:#090a0b;color:#fff;margin:0 -14px;min-height:calc(100dvh - 90px);position:relative;overflow:hidden;padding:0 18px 95px}
+.sushka-home:before{content:"";position:absolute;z-index:0;inset:0 0 auto;height:clamp(340px,105vw,580px);pointer-events:none;background:url("https://raw.githubusercontent.com/Setelite/FITKNOW/main/assets/fitness-couple-fullbody-v16.webp") right top / auto 100% no-repeat;opacity:1}
+.sushka-home:after{content:"";position:absolute;top:calc(clamp(340px,105vw,580px) - 65px);height:70px;left:0;right:0;pointer-events:none;background:linear-gradient(0deg,#090a0b,transparent)}
+.sushka-home>*{position:relative;z-index:1}
+.sushka-home .hero{padding:26px 2px 8px!important;min-height:290px}
+.sushka-home .hero h1{font:italic 1000 clamp(44px,10vw,70px)/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;color:#fff!important;background:none!important;-webkit-text-fill-color:#fff!important;letter-spacing:-.065em}
+.sushka-home .sushka-mark{display:none!important}
+.sushka-home .brand-kicker{display:block!important;color:#FFD400!important;font-size:12px!important;letter-spacing:.16em!important;font-weight:900!important}
+.sushka-home .hero .sub{font-size:17px!important;line-height:1.4!important;color:#eee!important;max-width:250px}
+.sushka-home .sushka-intro{background:transparent!important;border:0!important;box-shadow:none!important;margin:0 0 12px!important;padding:5px 1px!important}
+.sushka-home .sushka-intro img{display:none}
+.sushka-home .sushka-intro strong{font-size:clamp(30px,8vw,46px)!important;line-height:1.04!important;color:#fff!important;letter-spacing:-.05em}
+.sushka-home .sushka-intro span{color:#FFD400!important;font-size:13px!important;font-weight:750!important}
+.sushka-home .macros{background:#fff;padding:17px 13px 12px;border-radius:27px 27px 0 0;margin:0!important;gap:8px!important}
+.sushka-home .macro-box{background:#f0f0ef!important;border:0!important;border-radius:19px!important;box-shadow:none!important;padding:17px 3px!important;min-width:0}
+.sushka-home .macro-box .num{color:#101010!important;font-size:clamp(23px,7vw,39px)!important;font-weight:1000!important;line-height:1.08!important}
+.sushka-home .macro-box .num span{font-size:13px!important;opacity:1}
+.sushka-home .macro-box .lbl{font-size:12px!important;color:#666!important;font-weight:850}
+.sushka-home .kcal-line{background:#fff!important;color:#666!important;margin:0!important;padding:10px 17px 20px!important;border-radius:0 0 27px 27px;font-size:13px!important}
+.sushka-home .kcal-line b{color:#bb9200!important;font-size:23px!important}
+.sushka-home-actions{display:grid;gap:10px;margin-top:15px}
+.sushka-home-btn{display:flex;justify-content:space-between;align-items:center;min-height:62px;border-radius:19px;padding:15px 19px;font:900 17px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;text-align:left;cursor:pointer;border:1.5px solid transparent}
+.sushka-home-btn>span{font-size:26px}
+.sushka-home-primary{background:#FFD400;color:#101010}
+.sushka-home-secondary{background:#161616;color:#fff;border-color:#555}
+body:not(:has(#tab-home:checked)) .sushka-home{display:none!important}
+.tabs{display:none!important}
+.panel{background:#f5f5f3!important;color:#111!important;padding-top:23px!important;min-height:calc(100dvh - 180px)}
+.panel .section-title{color:#ad8400!important;font-size:19px!important;font-weight:950!important;line-height:1.2!important;margin:18px 0 15px!important}
+.panel h2,.panel h3{color:#111!important}
+.panel .meal-card,.panel .prod-card,.panel .ex-card,.panel .protocol-card,.panel .rule-card,.panel .big-stat,.panel .water-row,.panel .check-item,.panel .import-card,.panel .data-card,.panel .day-box,.panel .cardio-opt,.panel .avg-hero,.panel .entry-row,.panel .illustrated-welcome,
+.panel .macro-box,.panel .train-day-card{
+ background:#fff!important;background-image:none!important;
+ border:1px solid #e4e4e1!important;border-radius:22px!important;box-shadow:none!important;
+ color:#111!important;
+}
+.panel .btn,.panel .action-btn,.panel .training-tool-btn,.panel .day-btn{
+ border-radius:16px!important;font-weight:850!important;min-height:49px!important;
+}
+.panel .btn.primary,.panel .action-btn.primary,.panel .day-radio:checked~.day-tabs .day-btn{
+ background:#FFD400!important;border-color:#FFD400!important;color:#111!important
+}
+.panel .food-row,.panel .weight-label,.panel .food-amt,.panel .meal-head,.panel .meal-name,.panel .meal-time,
+.panel .ex-name,.panel .prod-name{color:#171717!important}
+.panel textarea,.panel input:not([type="checkbox"]):not([type="radio"]),.panel select{
+ border-radius:15px!important;max-width:100%!important;min-width:0!important;
+}
+.panel input[type="checkbox"]{accent-color:#FFD400!important}
+.panel .data-grid{grid-template-columns:minmax(0,1fr)!important}
+.panel .import-actions,.panel .data-actions{max-width:100%!important}
+.panel .file-label,.panel .file-picker{max-width:100%!important}
+.sushka-dock{position:fixed!important;z-index:210;bottom:calc(9px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;gap:5px;
+ width:min(calc(100% - 18px),680px);height:78px;padding:8px;
+ background:#fff;border:2px solid #111;border-radius:28px;box-shadow:0 9px 32px rgba(0,0,0,.23)}
+.sushka-dock button{display:grid;place-items:center;min-width:0;width:100%;height:58px;padding:8px 2px;border:2px solid transparent;border-radius:20px;color:#111;background:transparent;cursor:pointer}
+.sushka-dock button svg{stroke:#111!important;width:31px;height:31px;display:block}
+.sushka-dock button[aria-current="page"],.sushka-dock button[aria-expanded="true"]{background:#FFD400;border-color:#111}
+.sushka-dock button:focus-visible,.sushka-more button:focus-visible{outline:3px solid #FFD400;outline-offset:2px}
+.sushka-more[hidden]{display:none!important}
+.sushka-more{position:fixed;z-index:209;left:50%;transform:translateX(-50%);bottom:calc(100px + env(safe-area-inset-bottom));
+ width:min(calc(100% - 24px),670px);max-height:min(60vh,470px);overflow:auto;
+ background:#fff;border:1.5px solid #111;border-radius:26px;padding:16px 20px;box-shadow:0 20px 48px rgba(0,0,0,.27);color:#111}
+.sushka-more-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:24px;font-weight:950}
+.sushka-more-head button{height:44px;width:44px;border:0;border-radius:50%;font-size:27px;background:#eee;color:#111}
+.sushka-more>button{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:54px;border:0;border-top:1px solid #ececec;background:#fff;color:#111;text-align:left;font-size:19px;font-weight:850;padding:10px 4px;cursor:pointer}
+.sushka-more>button span{color:#967600}
+body .footer-note{color:#666!important}
+.theme-toggle{display:none!important}
+@media(max-width:410px){.sushka-home .hero{min-height:270px}.sushka-home .macros{gap:5px!important;padding:14px 8px 8px}.sushka-home .macro-box{padding:13px 2px!important}.sushka-dock{height:72px;padding:6px}.sushka-dock button{height:55px;border-radius:17px}.sushka-dock button svg{width:29px;height:29px}}
+@media(min-width:700px){.sushka-home:before{background-position:right top;background-size:auto 100%}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="sushka-home">
 
   <div class="hero">
     <div class="brand-row">
@@ -853,7 +941,13 @@ filter:drop-shadow(0 0 13px rgba(180,122,250,.38));background-size:contain!impor
   </div>
   <p class="kcal-line">≈ <b>1 925 ккал</b> / сутки · мясо и крупы — сырой/сухой вес</p>
 
-  <input type="radio" name="tabgroup" id="tab-food" class="tab-radio" checked>
+  <div class="sushka-home-actions">
+    <button type="button" data-go="tab-train" class="sushka-home-btn sushka-home-primary">Открыть тренировки <span>↗</span></button>
+    <button type="button" data-go="tab-data" class="sushka-home-btn sushka-home-secondary">Управление данными <span>↗</span></button>
+  </div>
+  </div>
+  <input type="radio" name="tabgroup" id="tab-home" class="tab-radio" checked>
+  <input type="radio" name="tabgroup" id="tab-food" class="tab-radio">
   <input type="radio" name="tabgroup" id="tab-cardio" class="tab-radio">
   <input type="radio" name="tabgroup" id="tab-foods" class="tab-radio">
   <input type="radio" name="tabgroup" id="tab-train" class="tab-radio">
@@ -1522,6 +1616,22 @@ filter:drop-shadow(0 0 13px rgba(180,122,250,.38));background-size:contain!impor
   <p class="footer-note">Точные КБЖУ зависят от конкретных продуктов и этикеток</p>
 </div>
 
+<nav class="sushka-dock" aria-label="Навигация Сушка Максим">
+<button type="button" data-tab="tab-home" aria-label="Главная" title="Главная"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 3l9 7v11H3V10Z"/><path d="M9 21v-8h6v8"/></svg></button>
+<button type="button" data-tab="tab-train" aria-label="Тренировки" title="Тренировки"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9v6M6 6v12M18 6v12M22 9v6M6 12h12"/></svg></button>
+<button type="button" data-tab="tab-food" aria-label="Питание" title="Питание"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18a9 9 0 0 1-18 0ZM8 7V4m4 3V3m4 4V4"/></svg></button>
+<button type="button" data-tab="tab-data" aria-label="Данные" title="Данные"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+<button type="button" id="sushkaMoreToggle" aria-label="Ещё разделы" title="Ещё разделы" aria-expanded="false" aria-controls="sushkaMore"><svg viewBox="0 0 24 24" aria-hidden="true" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+</nav>
+<div id="sushkaMore" class="sushka-more" hidden aria-label="Дополнительные разделы">
+  <div class="sushka-more-head"><strong>Все разделы</strong><button type="button" id="sushkaMoreClose" aria-label="Закрыть">×</button></div>
+  <button type="button" data-tab="tab-cardio">Кардио <span>↗</span></button>
+  <button type="button" data-tab="tab-foods">Продукты <span>↗</span></button>
+  <button type="button" data-tab="tab-supplements">БАДы <span>↗</span></button>
+  <button type="button" data-tab="tab-analyses">Анализы <span>↗</span></button>
+  <button type="button" data-tab="tab-health">Протокол <span>↗</span></button>
+</div>
+
 <script>
 function toggleCheck(cb){
   cb.closest('.check-item').classList.toggle('checked', cb.checked);
@@ -2176,6 +2286,37 @@ function initFitknowIllustrations(){
   });
 }
 initFitknowIllustrations();
+
+
+/* SUSHKA MINIMAL V1: navigation only; existing storage/import code untouched */
+(function initSushkaDock(){
+ const radios=[...document.querySelectorAll('input[name="tabgroup"]')];
+ const dock=document.querySelector('.sushka-dock');
+ const more=document.getElementById('sushkaMore');
+ const toggle=document.getElementById('sushkaMoreToggle');
+ const close=document.getElementById('sushkaMoreClose');
+ const iconButtons=[...dock.querySelectorAll('button[data-tab]')];
+ function setMore(open){more.hidden=!open;toggle.setAttribute('aria-expanded',String(open));}
+ function refresh(){
+   const active=radios.find(r=>r.checked)?.id||'tab-home';
+   document.body.dataset.screen=active==='tab-home'?'home':'section';
+   iconButtons.forEach(button=>{if(button.dataset.tab===active){button.setAttribute('aria-current','page')}else{button.removeAttribute('aria-current')}});
+   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',active==='tab-home'?'#090a0b':'#f5f5f3');
+ }
+ function select(id){
+   const input=document.getElementById(id);
+   if(!input)return;
+   input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));
+   setMore(false);refresh();
+   window.scrollTo({top:0,behavior:'instant'});
+ }
+ document.querySelectorAll('[data-tab],[data-go]').forEach(button=>button.addEventListener('click',()=>select(button.dataset.tab||button.dataset.go)));
+ toggle.addEventListener('click',()=>setMore(more.hidden));
+ close.addEventListener('click',()=>setMore(false));
+ radios.forEach(r=>r.addEventListener('change',()=>{setMore(false);refresh()}));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')setMore(false)});
+ refresh();
+})();
 
 </script>
 </body>
